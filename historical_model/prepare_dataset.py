@@ -24,7 +24,7 @@ class TokenDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         input_ids = self.tokens['input_ids'][idx]
         attention_mask = self.tokens['attention_mask'][idx]
-        return input_ids, attention_mask
+        return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 def split_query(query):
     """

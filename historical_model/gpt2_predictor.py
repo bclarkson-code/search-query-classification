@@ -59,9 +59,7 @@ class GPT2Predictor(pl.LightningModule):
         )
 
     def validation_step(self, batch, batch_idx):
-        inputs, targets = batch
-        input_ids, attention_mask = inputs
-        preds = self(input_ids, attention_mask)
+        preds = self(**batch)
         loss = self.loss(preds, targets)
         self.log(
             'valid/loss',
