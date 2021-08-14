@@ -78,7 +78,7 @@ if __name__ == '__main__':
         # Either get input_df from disk or build it
         raw_input_dir = 'raw_inputs'
         Path(raw_input_dir).mkdir(exist_ok=True)
-        raw_input_path = f'{raw_input_dir}/{ds_name}.feather'
+        raw_input_path = f'{raw_input_dir}/{ds_name}.pkl'
         if not os.path.exists(raw_input_path):
             # Read the dataset
             print('Reading dataset')
@@ -87,10 +87,10 @@ if __name__ == '__main__':
             # Build inputs
             print('Building inputs')
             input_df = build_inputs(base_df)
-            input_df.to_feather(raw_input_path)
+            input_df.to_pickle(raw_input_path)
         else:
             print('Reading inputs')
-            input_df = pd.read_feather(raw_input_path)
+            input_df = pd.read_pickle(raw_input_path)
 
         # Either get tokens from disk or build it
         token_file_path = f'tokens/{ds_name}.pkl'
