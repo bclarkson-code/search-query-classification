@@ -29,7 +29,7 @@ class TokenDataset(torch.utils.data.Dataset):
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 class PredWriter(BasePredictionWriter):
-    def __init__(self, output_dir: str, write_interval: str):
+    def __init__(self, output_dir, write_interval='batch'):
         super().__init__(write_interval)
         self.output_dir
 
