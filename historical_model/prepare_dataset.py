@@ -58,7 +58,7 @@ class PredWriter(BasePredictionWriter):
             batch_indices
     ):
         print('Writing preds')
-        predictions = [pred.cpu() for pred in predictions]
+        predictions = [[pred.cpu() for pred in output] for output in predictions]
         torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
         print('Done')
 
