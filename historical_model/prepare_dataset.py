@@ -110,7 +110,7 @@ if __name__ == '__main__':
 
         # Generate embeddings
         trainer = Trainer(
-            tpu_cores=8,
+            gpus=4,
             progress_bar_refresh_rate=1
         )
         with torch.no_grad():
