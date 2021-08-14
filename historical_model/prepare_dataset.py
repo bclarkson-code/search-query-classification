@@ -29,7 +29,7 @@ class TokenDataset(torch.utils.data.Dataset):
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 class PredWriter(BasePredictionWriter):
-    def __init__(self, output_dir, write_interval='epoch'):
+    def __init__(self, output_dir, write_interval='batch'):
         super().__init__(write_interval)
         self.output_dir = output_dir
         Path(self.output_dir).mkdir(exist_ok=True)
@@ -59,6 +59,7 @@ class PredWriter(BasePredictionWriter):
     ):
         print('Writing preds')
         torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
+        print('Done')
 
 def split_query(query):
     """
