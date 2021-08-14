@@ -80,8 +80,7 @@ class GPT2Predictor(pl.LightningModule):
         )
 
     def predict_step(self, batch, batch_idx, dataloader_idx=None):
-        input_ids, attention_mask = batch
-        return self(input_ids, attention_mask)
+        return self(**batch)
 
 
     def configure_optimizers(self):
