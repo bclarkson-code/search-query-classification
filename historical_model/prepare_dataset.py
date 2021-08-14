@@ -109,10 +109,11 @@ if __name__ == '__main__':
         token_ds = TokenDataset(tokens)
         token_loader = DataLoader(
             token_ds,
-            batch_size=64,
+            batch_size=16,
             num_workers=os.cpu_count()
         )
-
+        print(next(iter(token_loader)))
+        sys.exit()
         # Generate embeddings
         trainer = Trainer(
             tpu_cores=8,
