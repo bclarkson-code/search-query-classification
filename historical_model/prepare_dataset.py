@@ -32,6 +32,7 @@ class PredWriter(BasePredictionWriter):
     def __init__(self, output_dir, write_interval='epoch'):
         super().__init__(write_interval)
         self.output_dir = output_dir
+        Path(self.output_dir).mkdir(exist_ok=True)
 
     def write_on_batch_end(
             self,
