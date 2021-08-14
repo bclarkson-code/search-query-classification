@@ -57,6 +57,7 @@ class PredWriter(BasePredictionWriter):
             predictions,
             batch_indices
     ):
+        print('Writing preds')
         torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
 
 def split_query(query):
