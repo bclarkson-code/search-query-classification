@@ -107,13 +107,17 @@ if __name__ == '__main__':
             with open(token_file_path, 'rb') as f:
                 tokens = pickle.load(f)
         token_ds = TokenDataset(tokens)
-        token_loader = DataLoader(token_ds, batch_size=64, num_workers=os.cpu_count())
+        token_loader = DataLoader(
+            token_ds,
+            batch_size=64,
+            num_workers=os.cpu_count()
+        )
 
         # Generate embeddings
         trainer = Trainer(
             gpus=4,
             progress_bar_refresh_rate=1,
-            accelerator=ddp_spawn,
+            accelerator='ddp_spawn',
         )
         with torch.no_grad():
             preds = trainer.predict(embedder, token_loader)
