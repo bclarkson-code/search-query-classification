@@ -113,7 +113,7 @@ if __name__ == '__main__':
             num_workers=os.cpu_count()
         )
         print(next(iter(token_loader)))
-        sys.exit()
+
         # Generate embeddings
         trainer = Trainer(
             tpu_cores=8,
