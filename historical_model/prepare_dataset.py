@@ -44,7 +44,7 @@ class PredWriter(BasePredictionWriter):
             dataloader_idx
     ):
         torch.save(prediction, os.path.join(self.output_dir, dataloader_idx,
-                                            f"{batch_idx.zfill(5)}.pt"))
+                                            f"{str(batch_idx).zfill(5)}.pt"))
 
     def write_on_epoch_end(
             self,
