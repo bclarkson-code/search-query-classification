@@ -79,7 +79,7 @@ if __name__ == '__main__':
         raw_input_dir = 'raw_inputs'
         Path(raw_input_dir).mkdir(exist_ok=True)
         raw_input_path = f'{raw_input_dir}/{ds_name}.feather'
-        if not os.path.exists(raw_input_path)
+        if not os.path.exists(raw_input_path):
             # Read the dataset
             print('Reading dataset')
             base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
