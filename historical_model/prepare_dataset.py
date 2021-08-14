@@ -9,6 +9,8 @@ import numpy as np
 from pytorch_lightning import Trainer
 from pathlib import Path
 import pickle
+from pytorch_lightning.callbacks import BasePredictionWriter
+from glob import glob
 
 class TokenDataset(torch.utils.data.Dataset):
     """
@@ -25,6 +27,23 @@ class TokenDataset(torch.utils.data.Dataset):
         input_ids = self.tokens['input_ids'][idx]
         attention_mask = self.tokens['attention_mask'][idx]
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
+
+class PredWriter(BasePredictionWriter):
+    def __init__(self, output_dir: str, write_interval: str):
+        super().__init__(write_interval)
+        self.output_dir
+
+    def write_on_batch_end(
+            self, trainer, pl_module: 'LightningModule', prediction: Any, batch_indices: List[int], batch: Any,
+            batch_idx: int, dataloader_idx: int
+    ):
+        torch.save(prediction, os.path.join(self.output_dir, dataloader_idx,
+                                            f"{batch_idx.zfill(5)}.pt"))
+
+    def write_on_epoch_end(
+            self, trainer, pl_module: 'LightningModule', predictions: List[Any], batch_indices: List[Any]
+    ):
+        torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
 
 def split_query(query):
     """
@@ -112,17 +131,26 @@ if __name__ == '__main__':
             batch_size=128,
             num_workers=os.cpu_count()
         )
-
+        pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
         # Generate embeddings
         trainer = Trainer(
             tpu_cores=8,
             progress_bar_refresh_rate=1,
             accelerator='ddp_spawn',
+            callbacks=pred_writer
         )
         with torch.no_grad():
-            preds = trainer.predict(embedder, token_loader)
+            trainer.predict(embedder, token_loader)
 
-        print(preds)
+        pred_dir = f'{ds_name}_preds/*'
+        preds = []
+        pred_files = glob(f'{pred_dir}/*')
+        for pred in sorted(pred_files):
+            pred_path = os.path.join(pred_dir, pred)
+            pred = torch.load(pred_path)
+            preds.append(pred.numpy())
+
+
         preds = np.concatenate(preds)
         input_df['query_embedding'] = preds.tolist()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
