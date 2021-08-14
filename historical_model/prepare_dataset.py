@@ -72,19 +72,25 @@ if __name__ == '__main__':
 
     for ds_name in tqdm(['train', 'valid', 'test'], desc='Embedding'):
         # Read the dataset
+        print('Reading dataset')
         base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
+        print('Building inputs')
         input_df = build_inputs(base_df)
 
         # Tokenise the queries
+        print('Tokenising')
         tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
         token_ds = TokenDataset(tokens)
         token_loader = DataLoader(token_ds, batch_size=512, num_workers=os.cpu_count())
 
         # Generate embeddings
-        trainer = Trainer(tpus=8)
+        trainer = Trainer(
+            tpu_cores=8,
+            progress_bar_refresh_rate=1
+        )
         with torch.no_grad():
             preds = trainer.predict(embedder, token_loader)
 
         preds = np.concatenate(preds)
         input_df['query_embedding'] = preds.tolist()
-        input_df.to_feather(f'aol_data_{ds_name}_input_df.feather')
+        input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
