@@ -106,7 +106,7 @@ if __name__ == '__main__':
             with open(token_file_path, 'rb') as f:
                 tokens = pickle.load(f)
         token_ds = TokenDataset(tokens)
-        token_loader = DataLoader(token_ds, batch_size=512, num_workers=os.cpu_count())
+        token_loader = DataLoader(token_ds, batch_size=64, num_workers=os.cpu_count())
 
         # Generate embeddings
         trainer = Trainer(
