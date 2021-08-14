@@ -58,7 +58,7 @@ class PredWriter(BasePredictionWriter):
             batch_indices
     ):
         print('Writing preds')
-        torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
+        torch.save(predictions.cpu(), os.path.join(self.output_dir, "predictions.pt"))
         print('Done')
 
 def split_query(query):
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
         pred_path = f'{ds_name}_preds/predictions.pt'
         preds = torch.load(pred_path)
-        preds = np.concatenate(preds)
+        preds = np.concatenate(preds, axis=0)
 
         input_df['query_embedding'] = preds.tolist()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
