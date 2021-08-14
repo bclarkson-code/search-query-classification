@@ -109,7 +109,7 @@ if __name__ == '__main__':
         token_ds = TokenDataset(tokens)
         token_loader = DataLoader(
             token_ds,
-            batch_size=1,
+            batch_size=128,
             num_workers=os.cpu_count()
         )
         print(next(iter(token_loader)))
