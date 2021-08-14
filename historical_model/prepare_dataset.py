@@ -62,7 +62,7 @@ def build_inputs(df):
 if __name__ == '__main__':
     # Load Embedder
     embedder = GPT2Predictor.load_from_checkpoint(
-        '~/gpt2-checkpoints/model-epoch=00-valid/loss=1.86.ckpt',
+        'gpt2-checkpoints/model-epoch=00-valid/loss=1.86.ckpt',
         strict=False
     )
 

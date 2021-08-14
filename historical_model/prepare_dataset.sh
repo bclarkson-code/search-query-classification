@@ -7,6 +7,7 @@ fi
 if [ ! -d "gpt2-checkpoints" ]; then
   gsutil -m cp gs://search-query-classification-us-central1-c/gpt2-checkpoints.zip .
   unzip gpt2-checkpoints.zip
+  rm -rf gpt2-checkpoints.zip
 fi
 
 python3 prepare_dataset.py
