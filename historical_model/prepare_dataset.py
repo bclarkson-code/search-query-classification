@@ -31,7 +31,7 @@ class TokenDataset(torch.utils.data.Dataset):
 class PredWriter(BasePredictionWriter):
     def __init__(self, output_dir, write_interval='batch'):
         super().__init__(write_interval)
-        self.output_dir
+        self.output_dir = output_dir
 
     def write_on_batch_end(
             self,
