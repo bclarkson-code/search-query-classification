@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
         # Generate embeddings
         trainer = Trainer(
-            gpus=4,
+            tpu_cores=8,
             progress_bar_refresh_rate=1,
             accelerator='ddp_spawn',
         )
