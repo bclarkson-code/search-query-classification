@@ -160,7 +160,7 @@ if __name__ == '__main__':
 
         pred_path = f'{ds_name}_preds/predictions.pt'
         preds = torch.load(pred_path)
-        preds = preds.numpy()
+        preds = np.concatenate(preds.numpy())
 
         input_df['query_embedding'] = preds.tolist()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
