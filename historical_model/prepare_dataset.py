@@ -7,6 +7,8 @@ from torch.utils.data import DataLoader
 from transformers import AutoTokenizer
 import numpy as np
 from pytorch_lightning import Trainer
+from pathlib import Path
+import pickle
 
 class TokenDataset(torch.utils.data.Dataset):
     """
@@ -80,7 +82,15 @@ if __name__ == '__main__':
 
         # Tokenise the queries
         print('Tokenising')
-        tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
+        token_file_path = f'tokens/{ds_name}.pkl'
+        Path('tokens').mkdir(exist_ok=True)
+        if not os.path.exists(token_file_path):
+            tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
+            with open(token_file_path, 'wb') as f:
+                pickle.dump(tokens, f)
+        else:
+            with open(token_file_path, 'rb') as f:
+                tokens = pickle.load(f)
         token_ds = TokenDataset(tokens)
         token_loader = DataLoader(token_ds, batch_size=512, num_workers=os.cpu_count())
 
