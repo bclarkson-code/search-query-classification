@@ -74,17 +74,18 @@ if __name__ == '__main__':
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
     for ds_name in tqdm(['train', 'valid', 'test'], desc='Embedding'):
-        # Read the dataset
-        print('Reading dataset')
-        base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
-        print('Building inputs')
-        input_df = build_inputs(base_df)
-
-        # Tokenise the queries
-        print('Tokenising')
         token_file_path = f'tokens/{ds_name}.pkl'
         Path('tokens').mkdir(exist_ok=True)
         if not os.path.exists(token_file_path):
+            # Read the dataset
+            print('Reading dataset')
+            base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
+            print('Building inputs')
+            input_df = build_inputs(base_df)
+
+            # Tokenise the queries
+            print('Tokenising')
+
             tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
             with open(token_file_path, 'wb') as f:
                 pickle.dump(tokens, f)
