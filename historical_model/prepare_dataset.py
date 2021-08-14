@@ -22,7 +22,7 @@ class TokenDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         input_ids = self.tokens['input_ids'][idx]
         attention_mask = self.tokens['attention_mask'][idx]
-        return {'input_ids': input_ids, 'attention_mask': attention_mask}
+        return input_ids, attention_mask
 
 def split_query(query):
     """
@@ -69,6 +69,7 @@ if __name__ == '__main__':
     # Build tokeniser
     tokeniser = AutoTokenizer.from_pretrained('gpt2')
     tokeniser.pad_token = tokeniser.eos_token
+    os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
     for ds_name in tqdm(['train', 'valid', 'test'], desc='Embedding'):
         # Read the dataset
