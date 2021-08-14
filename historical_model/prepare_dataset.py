@@ -158,15 +158,9 @@ if __name__ == '__main__':
         with torch.no_grad():
             trainer.predict(embedder, token_loader)
 
-        pred_dir = f'{ds_name}_preds/*'
-        preds = []
-        pred_files = glob(f'{pred_dir}/*')
-        for pred in sorted(pred_files):
-            pred_path = os.path.join(pred_dir, pred)
-            pred = torch.load(pred_path)
-            preds.append(pred.numpy())
+        pred_path = f'{ds_name}_preds/predictions.pt'
+        preds = torch.load(pred_path)
+        preds = preds.numpy())
 
-
-        preds = np.concatenate(preds)
         input_df['query_embedding'] = preds.tolist()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
