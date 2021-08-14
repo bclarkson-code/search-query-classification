@@ -34,14 +34,24 @@ class PredWriter(BasePredictionWriter):
         self.output_dir
 
     def write_on_batch_end(
-            self, trainer, pl_module: 'LightningModule', prediction: Any, batch_indices: List[int], batch: Any,
-            batch_idx: int, dataloader_idx: int
+            self,
+            trainer,
+            pl_module: 'LightningModule',
+            prediction,
+            batch_indices: List[int],
+            batch,
+            batch_idx: int,
+            dataloader_idx: int
     ):
         torch.save(prediction, os.path.join(self.output_dir, dataloader_idx,
                                             f"{batch_idx.zfill(5)}.pt"))
 
     def write_on_epoch_end(
-            self, trainer, pl_module: 'LightningModule', predictions: List[Any], batch_indices: List[Any]
+            self,
+            trainer,
+            pl_module: 'LightningModule',
+            predictions,
+            batch_indices
     ):
         torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
 
