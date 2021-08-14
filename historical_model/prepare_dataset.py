@@ -49,6 +49,7 @@ def tokenize_function(strings, tokeniser):
         padding='max_length',
         truncation=True,
         max_length=24,
+        return_tensors='pt',
     )
 
 def build_inputs(df):
@@ -111,7 +112,8 @@ if __name__ == '__main__':
         # Generate embeddings
         trainer = Trainer(
             gpus=4,
-            progress_bar_refresh_rate=1
+            progress_bar_refresh_rate=1,
+            accelerator=ddp_spawn,
         )
         with torch.no_grad():
             preds = trainer.predict(embedder, token_loader)
