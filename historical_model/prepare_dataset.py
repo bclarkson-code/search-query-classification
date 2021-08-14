@@ -29,7 +29,7 @@ class TokenDataset(torch.utils.data.Dataset):
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 class PredWriter(BasePredictionWriter):
-    def __init__(self, output_dir, write_interval='batch'):
+    def __init__(self, output_dir, write_interval='epoch'):
         super().__init__(write_interval)
         self.output_dir = output_dir
 
@@ -43,8 +43,11 @@ class PredWriter(BasePredictionWriter):
             batch_idx,
             dataloader_idx
     ):
-        torch.save(prediction, os.path.join(self.output_dir, dataloader_idx,
-                                            f"{str(batch_idx).zfill(5)}.pt"))
+        save_path = os.path.join(
+            self.output_dir,
+            str(dataloader_idx),
+            f"{str(batch_idx).zfill(5)}.pt")
+        torch.save(prediction, save_path)
 
     def write_on_epoch_end(
             self,
