@@ -74,7 +74,7 @@ if __name__ == '__main__':
     os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 
-    for ds_name in tqdm(['train', 'valid', 'test'], desc='Embedding'):
+    for ds_name in tqdm(['valid', 'train', 'test'], desc='Embedding'):
         # Either get input_df from disk or build it
         raw_input_dir = 'raw_inputs'
         Path(raw_input_dir).mkdir(exist_ok=True)
