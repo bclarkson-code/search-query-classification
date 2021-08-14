@@ -29,7 +29,7 @@ class TokenDataset(torch.utils.data.Dataset):
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 class PredWriter(BasePredictionWriter):
-    def __init__(self, output_dir, write_interval='batch'):
+    def __init__(self, output_dir, write_interval='epoch'):
         super().__init__(write_interval)
         self.output_dir = output_dir
         Path(self.output_dir).mkdir(exist_ok=True)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
         pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
         # Generate embeddings
         trainer = Trainer(
-            tpu_cores=8,
+            tpu_cores=1,
             progress_bar_refresh_rate=1,
             accelerator='ddp_spawn',
             callbacks=pred_writer
