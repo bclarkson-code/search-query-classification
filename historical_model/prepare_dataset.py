@@ -112,7 +112,6 @@ if __name__ == '__main__':
             batch_size=128,
             num_workers=os.cpu_count()
         )
-        print(next(iter(token_loader)))
 
         # Generate embeddings
         trainer = Trainer(
@@ -123,6 +122,7 @@ if __name__ == '__main__':
         with torch.no_grad():
             preds = trainer.predict(embedder, token_loader)
 
+        print(preds)
         preds = np.concatenate(preds)
         input_df['query_embedding'] = preds.tolist()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
