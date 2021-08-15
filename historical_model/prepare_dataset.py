@@ -116,49 +116,50 @@ if __name__ == '__main__':
         raw_input_dir = 'raw_inputs'
         Path(raw_input_dir).mkdir(exist_ok=True)
         raw_input_path = f'{raw_input_dir}/{ds_name}.pkl'
-        if not os.path.exists(raw_input_path):
-            # Read the dataset
-            print('Reading dataset')
-            base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
+        if not os.path.exists(f'{ds_name}_preds'):
+            if not os.path.exists(raw_input_path):
+                # Read the dataset
+                print('Reading dataset')
+                base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
 
-            # Build inputs
-            print('Building inputs')
-            input_df = build_inputs(base_df)
-            input_df.to_pickle(raw_input_path)
-        else:
-            print('Reading inputs')
-            input_df = pd.read_pickle(raw_input_path)
+                # Build inputs
+                print('Building inputs')
+                input_df = build_inputs(base_df)
+                input_df.to_pickle(raw_input_path)
+            else:
+                print('Reading inputs')
+                input_df = pd.read_pickle(raw_input_path)
 
-        # Either get tokens from disk or build it
-        token_file_path = f'tokens/{ds_name}.pkl'
-        Path('tokens').mkdir(exist_ok=True)
-        if not os.path.exists(token_file_path):
-            # Tokenise the queries
-            print('Tokenising')
-            tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
-            with open(token_file_path, 'wb') as f:
-                pickle.dump(tokens, f)
-        else:
-            print('Reading tokens')
-            with open(token_file_path, 'rb') as f:
-                tokens = pickle.load(f)
+            # Either get tokens from disk or build it
+            token_file_path = f'tokens/{ds_name}.pkl'
+            Path('tokens').mkdir(exist_ok=True)
+            if not os.path.exists(token_file_path):
+                # Tokenise the queries
+                print('Tokenising')
+                tokens = tokenize_function(input_df['Query'].tolist(), tokeniser)
+                with open(token_file_path, 'wb') as f:
+                    pickle.dump(tokens, f)
+            else:
+                print('Reading tokens')
+                with open(token_file_path, 'rb') as f:
+                    tokens = pickle.load(f)
 
-        token_ds = TokenDataset(tokens)
-        token_loader = DataLoader(
-            token_ds,
-            batch_size=128,
-            num_workers=os.cpu_count()
-        )
-        pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
-        # Generate embeddings
-        trainer = Trainer(
-            tpu_cores=1,
-            progress_bar_refresh_rate=1,
-            accelerator='ddp_spawn',
-            callbacks=pred_writer
-        )
-        with torch.no_grad():
-            trainer.predict(embedder, token_loader)
+            token_ds = TokenDataset(tokens)
+            token_loader = DataLoader(
+                token_ds,
+                batch_size=128,
+                num_workers=os.cpu_count()
+            )
+            pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
+            # Generate embeddings
+            trainer = Trainer(
+                tpu_cores=1,
+                progress_bar_refresh_rate=1,
+                accelerator='ddp_spawn',
+                callbacks=pred_writer
+            )
+            with torch.no_grad():
+                trainer.predict(embedder, token_loader)
 
         print('Reading predictions')
         pred_dir = f'{ds_name}_preds'
