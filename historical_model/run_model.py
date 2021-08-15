@@ -8,7 +8,7 @@ import os
 if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('historical-model-logs/')
     inputs = HistoricalQueryDataModule(
-        batch_size=512,
+        batch_size=128,
         num_workers=os.cpu_count(),
     )
     classifier = HistoricalClassifier(
