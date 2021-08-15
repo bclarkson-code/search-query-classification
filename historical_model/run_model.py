@@ -3,6 +3,7 @@ import pytorch_lightning as pl
 from pathlib import Path
 from dataset import HistoricalQueryDataModule
 from pytorch_lightning import loggers as pl_loggers
+import os
 
 if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('historical-model-logs/')
