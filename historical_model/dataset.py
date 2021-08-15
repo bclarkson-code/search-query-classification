@@ -9,16 +9,8 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
     n_labels = 16
     def __init__(self, df, encoding):
         self.encoding = encoding
-        try:
-            print(df['historical_embedding'])
-        except Exception as e:
-            print(df)
-            raise e
-
         self.hist_embedding = df['historical_embedding']
-        print(df['historical_label'])
         self.hist_label = df['historical_label']
-        print(df[range(768)])
         self.query_embedding = df[range(768)]
         self.category = df['category'].replace(encoding)
 
@@ -56,12 +48,13 @@ class HistoricalQueryDataModule(LightningDataModule):
         with open('datasets/aol_data_test_input_df.pkl', 'rb') as f:
             self.test = HistoricalModelDataset(pickle.load(f), self.label_encoding)
         with open('datasets/aol_data_valid_input_df.pkl', 'rb') as f:
-            self.valid = HistoricalModelDataset(pickle.load(f), self.label_encoding)
+            valid_df = pickle.load(f)
+            self.valid = HistoricalModelDataset(valid_df, self.label_encoding)
 
         print(f'self.valid: {self.valid}')
         self.label_encoding = {
             cat: i for i, cat in enumerate(
-                self.valid['category'].unique()
+                valid_df['category'].unique()
             )
         }
 
