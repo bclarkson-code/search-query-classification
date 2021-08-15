@@ -20,10 +20,7 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         category_idx = self.category.iloc[idx]
         input_vec = np.concatenate([hist_embedding, hist_label, query_embedding])
 
-        category_vec = np.zeros(self.n_labels, dtype=np.float32)
-        category_vec[category_idx] = 1.0
-
-        return input_vec, category_vec
+        return input_vec, category_idx
 
     def __len__(self):
         return len(self.category)
