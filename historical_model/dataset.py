@@ -9,7 +9,12 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
     n_labels = 16
     def __init__(self, df, encoding):
         self.encoding = encoding
-        print(df['historical_embedding'])
+        try:
+            print(df['historical_embedding'])
+        except Exception as e:
+            print(df)
+            raise e
+
         self.hist_embedding = df['historical_embedding']
         print(df['historical_label'])
         self.hist_label = df['historical_label']
