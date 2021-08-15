@@ -20,7 +20,8 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         query_embedding = self.query_embedding.iloc[idx].values
         category_idx = self.category.iloc[idx]
         input_vec = np.concatenate([hist_embedding, hist_label, query_embedding])
-
+        print(hist_label, category_idx)
+        raise ValueError
         return input_vec, category_idx
 
     def __len__(self):
@@ -51,7 +52,6 @@ class HistoricalQueryDataModule(LightningDataModule):
             valid_df = pickle.load(f)
             self.valid = HistoricalModelDataset(valid_df, self.label_encoding)
 
-        print(f'self.valid: {self.valid}')
         self.label_encoding = {
             cat: i for i, cat in enumerate(
                 valid_df['category'].unique()
