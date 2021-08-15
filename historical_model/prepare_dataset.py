@@ -29,7 +29,7 @@ class TokenDataset(torch.utils.data.Dataset):
         return {'input_ids': input_ids, 'attention_mask': attention_mask}
 
 class PredWriter(BasePredictionWriter):
-    def __init__(self, output_dir, write_interval='epoch'):
+    def __init__(self, output_dir, write_interval='batch'):
         super().__init__(write_interval)
         self.output_dir = output_dir
         Path(self.output_dir).mkdir(exist_ok=True)
@@ -46,7 +46,6 @@ class PredWriter(BasePredictionWriter):
     ):
         save_path = os.path.join(
             self.output_dir,
-            str(dataloader_idx),
             f"{str(batch_idx).zfill(5)}.pt")
         torch.save(prediction, save_path)
 
@@ -161,6 +160,9 @@ if __name__ == '__main__':
 
         pred_path = f'{ds_name}_preds/predictions.pt'
         preds = torch.load(pred_path)
+        print(len(preds))
+        print(len(preds[[0]]))
+        print(len(preds[0][0]))
         preds = np.concatenate(preds[0])
 
         input_df['query_embedding'] = preds.tolist()
