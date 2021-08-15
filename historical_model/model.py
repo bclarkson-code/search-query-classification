@@ -12,6 +12,7 @@ class HistoricalClassifier(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(512, 16)
         )
+        self.learning_rate = learning_rate
         self.loss_fn = nn.CrossEntropyLoss()
         self.train_acc = torchmetrics.Accuracy()
         self.valid_acc = torchmetrics.Accuracy()
