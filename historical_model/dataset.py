@@ -52,11 +52,11 @@ class HistoricalQueryDataModule(LightningDataModule):
 
     def prepare_data(self):
         with open('datasets/aol_data_train_input_df.pkl', 'rb') as f:
-            self.train = pickle.load(f)
+            self.train = HistoricalModelDataset(pickle.load(f), self.label_encoding)
         with open('datasets/aol_data_test_input_df.pkl', 'rb') as f:
-            self.test = pickle.load(f)
+            self.test = HistoricalModelDataset(pickle.load(f), self.label_encoding)
         with open('datasets/aol_data_valid_input_df.pkl', 'rb') as f:
-            self.valid = pickle.load(f)
+            self.valid = HistoricalModelDataset(pickle.load(f), self.label_encoding)
 
         print(f'self.valid: {self.valid}')
         self.label_encoding = {
@@ -66,27 +66,24 @@ class HistoricalQueryDataModule(LightningDataModule):
         }
 
     def train_dataloader(self):
-        train_split = HistoricalModelDataset(self.train, self.label_encoding)
         return DataLoader(
-            train_split,
+            self.train,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             shuffle=True
         )
 
     def val_dataloader(self):
-        val_split = HistoricalModelDataset(self.valid, self.label_encoding)
         return DataLoader(
-            val_split,
+            self.valid,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             shuffle=False
         )
 
     def test_dataloader(self):
-        test_split = HistoricalModelDataset(self.test, self.label_encoding)
         return DataLoader(
-            test_split,
+            self.test,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             shuffle=False
