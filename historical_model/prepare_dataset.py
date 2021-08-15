@@ -47,6 +47,8 @@ class PredWriter(BasePredictionWriter):
         save_path = os.path.join(
             self.output_dir,
             f"{str(batch_idx).zfill(5)}.pt")
+        print(prediction[0].shape)
+        print(len(prediction))
         prediction = [pred.cpu() for pred in prediction]
         torch.save(prediction, save_path)
 
