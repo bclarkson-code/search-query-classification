@@ -22,4 +22,4 @@ if __name__ == '__main__':
         logger=tb_logger,
         default_root_dir='gpt2_model_save'
     )
-    trainer.fit(model, queries)
+    trainer.fit(classifier, inputs)
