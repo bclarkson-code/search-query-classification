@@ -1,8 +1,12 @@
 import torch
 from torch import nn
 import pytorch_lightning as pl
+import torchmetrics
+
 
 class HistoricalClassifier(pl.LightningModule):
+    learning_rate = 1e-4
+
     def __init__(self):
         super().__init__()
         self.classifier = nn.Sequential(
@@ -10,23 +14,58 @@ class HistoricalClassifier(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(512, 16)
         )
-        self.loss_fn = nn.BCEWithLogitsLoss()
+        self.loss_fn = nn.CrossEntropyLoss()
+        self.train_acc = torchmetrics.Accuracy()
+        self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, x):
-        # in lightning, forward defines the prediction/inference actions
-        embedding = self.classifier(x)
-        return embedding
+        return self.classifier(x)
 
     def training_step(self, batch, batch_idx):
-        # training_step defined the train loop.
-        # It is independent of forward
         x, y = batch
         pred = self(x)
         loss = self.loss_fn(pred, y)
-        # Logging to TensorBoard by default
-        self.log("train_loss", loss)
+        self.log(
+            'train_loss',
+            loss,
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True
+        )
+        self.train_acc(pred, y)
         return loss
 
+    def training_epoch_end(self, outputs):
+        self.log(
+            'train_accuracy',
+            self.train_acc.compute(),
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True
+        )
+
+    def validation_step(self, batch, batch_idx):
+        x, y = batch
+        pred = self(x)
+        loss = self.loss_fn(pred, y)
+        self.log(
+            'valid_loss',
+            loss,
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True
+        )
+        self.valid_acc(pred, y)
+        return loss
+
+    def validation_epoch_end(self, outputs):
+        self.log(
+            'valid_accuracy',
+            self.valid_acc.compute(),
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True
+        )
+
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        return optimizer
+        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)

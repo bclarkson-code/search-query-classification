@@ -1,9 +1,32 @@
+import torch
+import numpy as np
+from pytorch_lightning import LightningDataModule
+import pandas as pd
+from torch.utils.data import DataLoader
+
 class HistoricalModelDataset(torch.utils.data.Dataset):
-    def __init__(self, df):
-        self.data = df.values
+    n_labels = 16
+    def __init__(self, df, encoding):
+        self.encoding = encoding
+        self.hist_embedding = df['historical_embedding']
+        self.hist_label = df['historical_label']
+        self.query_embedding = df[range(768)]
+        self.category = df['category'].str.replace(self.encoding)
 
     def __getitem__(self, idx):
-        historical,
+        hist_embedding = self.hist_embedding.iloc[idx]
+        hist_label = self.hist_label.iloc[idx]
+        query_embedding = self.query_embedding.iloc[idx].values
+        category_idx = self.category.iloc[idx]
+        input_vec = np.concatenate([hist_embedding, hist_label, query_embedding])
+
+        category_vec = np.zeros(n_labels, dtype=np.float32)
+        category_vec[category_idx] = 1.0
+
+        return input_vec, category_vec
+
+    def __len__(self):
+        return len(self.category)
 
 class HistoricalQueryDataModule(LightningDataModule):
     def __init__(
@@ -22,7 +45,6 @@ class HistoricalQueryDataModule(LightningDataModule):
         self.label_encoding = {}
 
     def prepare_data(self):
-        logger.info('Reading Data')
         self.train = pd.read_pickle('datasets/aol_data_train_input_df.feather')
         self.valid = pd.read_pickle('datasets/aol_data_valid_input_df.feather')
         self.test = pd.read_pickle('datasets/aol_data_test_input_df.feather')
