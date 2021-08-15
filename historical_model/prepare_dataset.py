@@ -46,9 +46,10 @@ class PredWriter(BasePredictionWriter):
     ):
         save_path = os.path.join(
             self.output_dir,
-            f"{str(batch_idx).zfill(5)}.pt")
-        prediction = prediction.cpu()
-        torch.save(prediction, save_path)
+            f"{str(batch_idx).zfill(5)}.pkl")
+        prediction = prediction.cpu().numpy()
+        with open(save_path, 'wb') as f:
+            pickle.dump(prediction, f)
         del prediction
 
     def write_on_epoch_end(
@@ -158,12 +159,19 @@ if __name__ == '__main__':
         with torch.no_grad():
             trainer.predict(embedder, token_loader)
 
+        print('Reading Predicions')
         pred_dir = f'{ds_name}_preds'
-        preds = glob(pred_dir + '/*')
-        preds = sorted(preds)
-        preds = [torch.load(pred) for pred in preds]
-        preds = np.concatenate(preds)
+        pred_paths = glob(pred_dir + '/*')
+        pred_paths = sorted(pred_paths)
 
+        preds = []
+        for path in preds_paths:
+            with open(path, 'rb') as f:
+                pred = pickle.load(f)
+                preds.append(pred)
+
+        print('Saving predictions')
+        preds = np.concatenate(preds)
         pred_cols = [f'q_{i}' for i in range(768)]
         input_df[pred_cols] = preds
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
