@@ -165,7 +165,7 @@ if __name__ == '__main__':
         pred_paths = sorted(pred_paths)
 
         preds = []
-        for path in preds_paths:
+        for path in pred_paths:
             with open(path, 'rb') as f:
                 pred = pickle.load(f)
                 preds.append(pred)
