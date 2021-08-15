@@ -9,8 +9,11 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
     n_labels = 16
     def __init__(self, df, encoding):
         self.encoding = encoding
+        print(df['historical_embedding'])
         self.hist_embedding = df['historical_embedding']
+        print(df['historical_label'])
         self.hist_label = df['historical_label']
+        print(df[range(768)])
         self.query_embedding = df[range(768)]
         self.category = df['category'].replace(encoding)
 
