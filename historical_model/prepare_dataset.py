@@ -47,9 +47,8 @@ class PredWriter(BasePredictionWriter):
         save_path = os.path.join(
             self.output_dir,
             f"{str(batch_idx).zfill(5)}.pt")
-        print(prediction[0].shape)
-        print(len(prediction))
-        prediction = [pred.cpu() for pred in prediction]
+        print(prediction.shape)
+        prediction = prediction.cpu()
         torch.save(prediction, save_path)
 
     def write_on_epoch_end(
