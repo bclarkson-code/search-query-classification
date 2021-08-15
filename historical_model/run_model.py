@@ -16,7 +16,7 @@ if __name__ == '__main__':
     )
     Path('gpt2_model_save').mkdir(exist_ok=True)
     trainer = pl.Trainer(
-        tpu_cores=8,
+        gpus=4,
         max_epochs=5,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
