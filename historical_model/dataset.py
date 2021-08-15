@@ -11,7 +11,7 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         self.hist_embedding = df['historical_embedding']
         self.hist_label = df['historical_label']
         self.query_embedding = df[range(768)]
-        self.category = df['category'].str.replace(self.encoding)
+        self.category = df['category'].replace(encoding)
 
     def __getitem__(self, idx):
         hist_embedding = self.hist_embedding.iloc[idx]
@@ -20,7 +20,7 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         category_idx = self.category.iloc[idx]
         input_vec = np.concatenate([hist_embedding, hist_label, query_embedding])
 
-        category_vec = np.zeros(n_labels, dtype=np.float32)
+        category_vec = np.zeros(self.n_labels, dtype=np.float32)
         category_vec[category_idx] = 1.0
 
         return input_vec, category_vec
