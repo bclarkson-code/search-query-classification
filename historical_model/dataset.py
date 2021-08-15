@@ -24,7 +24,7 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         return input_vec, category_idx
 
     def __len__(self):
-        return len(self.category)
+        return len(self.query_embedding)
 
 class HistoricalQueryDataModule(LightningDataModule):
     def __init__(
