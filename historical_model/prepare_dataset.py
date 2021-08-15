@@ -47,9 +47,9 @@ class PredWriter(BasePredictionWriter):
         save_path = os.path.join(
             self.output_dir,
             f"{str(batch_idx).zfill(5)}.pt")
-        print(prediction.shape)
         prediction = prediction.cpu()
         torch.save(prediction, save_path)
+        del predictions
 
     def write_on_epoch_end(
             self,
@@ -58,10 +58,8 @@ class PredWriter(BasePredictionWriter):
             predictions,
             batch_indices
     ):
-        print('Writing preds')
         predictions = [[pred.cpu() for pred in output] for output in predictions]
         torch.save(predictions, os.path.join(self.output_dir, "predictions.pt"))
-        print('Done')
 
 def split_query(query):
     """
@@ -160,12 +158,12 @@ if __name__ == '__main__':
         with torch.no_grad():
             trainer.predict(embedder, token_loader)
 
-        pred_path = f'{ds_name}_preds/predictions.pt'
-        preds = torch.load(pred_path)
-        print(len(preds))
-        print(len(preds[[0]]))
-        print(len(preds[0][0]))
-        preds = np.concatenate(preds[0])
+        pred_dir = f'{ds_name}_preds'
+        preds = glob(pred_dir + '/*')
+        preds = sorted(preds)
+        preds = [torch.load(os.path.join(pred_dir, pred)) for pred in preds]
+        preds = np.concatenate(preds)
 
-        input_df['query_embedding'] = preds.tolist()
+        pred_cols = [f'q_{i}' for i in range(768)]
+        input_df[pred_cols] = vec.numpy()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
