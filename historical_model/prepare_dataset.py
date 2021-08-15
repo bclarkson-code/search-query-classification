@@ -161,7 +161,7 @@ if __name__ == '__main__':
         pred_dir = f'{ds_name}_preds'
         preds = glob(pred_dir + '/*')
         preds = sorted(preds)
-        preds = [torch.load(os.path.join(pred_dir, pred)) for pred in preds]
+        preds = [torch.load(pred) for pred in preds]
         preds = np.concatenate(preds)
 
         pred_cols = [f'q_{i}' for i in range(768)]
