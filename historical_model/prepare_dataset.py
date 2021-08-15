@@ -165,5 +165,5 @@ if __name__ == '__main__':
         preds = np.concatenate(preds)
 
         pred_cols = [f'q_{i}' for i in range(768)]
-        input_df[pred_cols] = vec.numpy()
+        input_df[pred_cols] = preds.numpy()
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
