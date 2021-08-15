@@ -49,7 +49,7 @@ class PredWriter(BasePredictionWriter):
             f"{str(batch_idx).zfill(5)}.pt")
         prediction = prediction.cpu()
         torch.save(prediction, save_path)
-        del predictions
+        del prediction
 
     def write_on_epoch_end(
             self,
