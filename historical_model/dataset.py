@@ -42,9 +42,9 @@ class HistoricalQueryDataModule(LightningDataModule):
         self.label_encoding = {}
 
     def prepare_data(self):
-        self.train = pd.read_pickle('aol_input_data/aol_data_train_input_df.feather')
-        self.valid = pd.read_pickle('aol_input_data/aol_data_valid_input_df.feather')
-        self.test = pd.read_pickle('aol_input_data/aol_data_test_input_df.feather')
+        self.train = pd.read_pickle('datasets/aol_data_train_input_df.feather')
+        self.valid = pd.read_pickle('datasets/aol_data_valid_input_df.feather')
+        self.test = pd.read_pickle('datasets/aol_data_test_input_df.feather')
 
         self.label_encoding = {
             cat: i for i, cat in enumerate(
