@@ -116,20 +116,20 @@ if __name__ == '__main__':
         raw_input_dir = 'raw_inputs'
         Path(raw_input_dir).mkdir(exist_ok=True)
         raw_input_path = f'{raw_input_dir}/{ds_name}.pkl'
+
+        if not os.path.exists(raw_input_path):
+            # Read the dataset
+            print('Reading dataset')
+            base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
+
+            # Build inputs
+            print('Building inputs')
+            input_df = build_inputs(base_df)
+            input_df.to_pickle(raw_input_path)
+        else:
+            print('Reading inputs')
+            input_df = pd.read_pickle(raw_input_path)
         if not os.path.exists(f'{ds_name}_preds'):
-            if not os.path.exists(raw_input_path):
-                # Read the dataset
-                print('Reading dataset')
-                base_df = pd.read_feather(f'datasets/aol_data_{ds_name}.feather')
-
-                # Build inputs
-                print('Building inputs')
-                input_df = build_inputs(base_df)
-                input_df.to_pickle(raw_input_path)
-            else:
-                print('Reading inputs')
-                input_df = pd.read_pickle(raw_input_path)
-
             # Either get tokens from disk or build it
             token_file_path = f'tokens/{ds_name}.pkl'
             Path('tokens').mkdir(exist_ok=True)
