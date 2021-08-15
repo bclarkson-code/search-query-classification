@@ -46,18 +46,20 @@ class HistoricalQueryDataModule(LightningDataModule):
 
     def prepare_data(self):
         with open('datasets/aol_data_train_input_df.pkl', 'rb') as f:
-            self.train = HistoricalModelDataset(pickle.load(f), self.label_encoding)
+            train_df = pickle.load(f)
+            self.label_encoding = {
+                cat: i for i, cat in enumerate(
+                    train_df['category'].unique()
+                )
+            }
+            self.train = HistoricalModelDataset(train_df, self.label_encoding)
         with open('datasets/aol_data_test_input_df.pkl', 'rb') as f:
             self.test = HistoricalModelDataset(pickle.load(f), self.label_encoding)
         with open('datasets/aol_data_valid_input_df.pkl', 'rb') as f:
             valid_df = pickle.load(f)
             self.valid = HistoricalModelDataset(valid_df, self.label_encoding)
 
-        self.label_encoding = {
-            cat: i for i, cat in enumerate(
-                valid_df['category'].unique()
-            )
-        }
+
 
     def train_dataloader(self):
         return DataLoader(
