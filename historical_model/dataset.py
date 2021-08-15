@@ -50,6 +50,7 @@ class HistoricalQueryDataModule(LightningDataModule):
         with open('datasets/aol_data_valid_input_df.pkl', 'rb') as f:
             self.valid = pickle.load(f)
 
+        print(f'self.valid: {self.valid}')
         self.label_encoding = {
             cat: i for i, cat in enumerate(
                 self.valid['category'].unique()
