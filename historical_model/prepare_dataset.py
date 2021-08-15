@@ -178,4 +178,4 @@ if __name__ == '__main__':
             input_df.reset_index(drop=True),
             pd.DataFrame(preds).reset_index(drop=True)
         ], axis=1)
-        df.to_pickle(f'datasets/aol_data_{ds_name}_input_df.feather')
+        df.to_pickle(f'datasets/aol_data_{ds_name}_input_df.pkl')

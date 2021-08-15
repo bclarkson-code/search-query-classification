@@ -14,12 +14,12 @@ if __name__ == '__main__':
     classifier = HistoricalClassifier(
         learning_rate=1e-4,
     )
-    Path('gpt2_model_save').mkdir(exist_ok=True)
+    Path('model_save').mkdir(exist_ok=True)
     trainer = pl.Trainer(
         gpus=4,
         max_epochs=5,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
-        default_root_dir='gpt2_model_save'
+        default_root_dir='model_save'
     )
     trainer.fit(classifier, inputs)
