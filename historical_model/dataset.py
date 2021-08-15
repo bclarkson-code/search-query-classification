@@ -1,3 +1,10 @@
+class HistoricalModelDataset(torch.utils.data.Dataset):
+    def __init__(self, df):
+        self.data = df.values
+
+    def __getitem__(self, idx):
+        historical,
+
 class HistoricalQueryDataModule(LightningDataModule):
     def __init__(
             self,
@@ -8,10 +15,6 @@ class HistoricalQueryDataModule(LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-        self.train_df = None
-        self.test_df = None
-        self.valid_df = None
-
         self.train = None
         self.test = None
         self.valid = None
@@ -20,14 +23,9 @@ class HistoricalQueryDataModule(LightningDataModule):
 
     def prepare_data(self):
         logger.info('Reading Data')
-        self.train = pd.read_feather('aol_data_train.feather')
-        self.test = pd.read_feather('aol_data_test.feather')
-        self.valid = pd.read_feather('aol_data_valid.feather')
-
-        logger.info('Preparing Inputs')
-        self.train = build_inputs(self.train_df)
-        self.test = build_inputs(self.test_df)
-        self.valid = build_inputs(self.valid_df)
+        self.train = pd.read_pickle('datasets/aol_data_train_input_df.feather')
+        self.valid = pd.read_pickle('datasets/aol_data_valid_input_df.feather')
+        self.test = pd.read_pickle('datasets/aol_data_test_input_df.feather')
 
         self.label_encoding = {
             cat: i for i, cat in enumerate(
