@@ -142,22 +142,23 @@ if __name__ == '__main__':
             print('Reading tokens')
             with open(token_file_path, 'rb') as f:
                 tokens = pickle.load(f)
-        token_ds = TokenDataset(tokens)
-        token_loader = DataLoader(
-            token_ds,
-            batch_size=128,
-            num_workers=os.cpu_count()
-        )
-        pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
-        # Generate embeddings
-        trainer = Trainer(
-            tpu_cores=1,
-            progress_bar_refresh_rate=1,
-            accelerator='ddp_spawn',
-            callbacks=pred_writer
-        )
-        with torch.no_grad():
-            trainer.predict(embedder, token_loader)
+        if ds_name == 'test':
+            token_ds = TokenDataset(tokens)
+            token_loader = DataLoader(
+                token_ds,
+                batch_size=128,
+                num_workers=os.cpu_count()
+            )
+            pred_writer = PredWriter(output_dir=f'{ds_name}_preds')
+            # Generate embeddings
+            trainer = Trainer(
+                tpu_cores=1,
+                progress_bar_refresh_rate=1,
+                accelerator='ddp_spawn',
+                callbacks=pred_writer
+            )
+            with torch.no_grad():
+                trainer.predict(embedder, token_loader)
 
         print('Reading Predicions')
         pred_dir = f'{ds_name}_preds'
