@@ -3,6 +3,7 @@ import numpy as np
 from pytorch_lightning import LightningDataModule
 import pandas as pd
 from torch.utils.data import DataLoader
+import pickle5 as pickle
 
 class HistoricalModelDataset(torch.utils.data.Dataset):
     n_labels = 16
@@ -42,9 +43,12 @@ class HistoricalQueryDataModule(LightningDataModule):
         self.label_encoding = {}
 
     def prepare_data(self):
-        self.train = pd.read_pickle('datasets/aol_data_train_input_df.pkl')
-        self.valid = pd.read_pickle('datasets/aol_data_valid_input_df.pkl')
-        self.test = pd.read_pickle('datasets/aol_data_test_input_df.pkl')
+        with open('datasets/aol_data_train_input_df.pkl', 'rb') as f:
+            self.train = pickle.load(f)
+        with open('datasets/aol_data_test_input_df.pkl', 'rb') as f:
+            self.test = pickle.load(f)
+        with open('datasets/aol_data_valid_input_df.pkl', 'rb') as f:
+            self.valid = pickle.load(f)
 
         self.label_encoding = {
             cat: i for i, cat in enumerate(
