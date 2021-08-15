@@ -48,6 +48,8 @@ class HistoricalClassifier(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, y = batch
         pred = self(x)
+        print(pred.shape)
+        print(y.shape)
         loss = self.loss_fn(pred, y)
         self.log(
             'valid_loss',
