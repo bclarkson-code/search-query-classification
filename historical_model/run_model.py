@@ -14,7 +14,7 @@ if __name__ == '__main__':
     classifier = HistoricalClassifier(
         learning_rate=1e-4,
     )
-    Path('gpt2_model_save').mkdir(exists_ok=True)
+    Path('gpt2_model_save').mkdir(exist_ok=True)
     trainer = pl.Trainer(
         tpu_cores=8,
         max_epochs=5,
