@@ -172,6 +172,8 @@ if __name__ == '__main__':
 
         print('Saving predictions')
         preds = np.concatenate(preds)
-        pred_cols = [f'q_{i}' for i in range(768)]
-        input_df[pred_cols] = preds
+        df = pd.concat([
+            input_df.reset_index(drop=True),
+            pd.DataFrame(preds).reset_index(drop=True)
+        ], axis=1)
         input_df.to_feather(f'datasets/aol_data_{ds_name}_input_df.feather')
