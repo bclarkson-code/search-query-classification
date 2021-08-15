@@ -17,6 +17,7 @@ if __name__ == '__main__':
     Path('model_save').mkdir(exist_ok=True)
     trainer = pl.Trainer(
         gpus=4,
+        accelerator='ddp',
         max_epochs=5,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
