@@ -52,6 +52,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 "<unk>",
                 "<mask>",
             ])
+        Path(self.tokeniser_path).mkdir(exist_ok=True)
         self.tokenizer.save_model(self.tokeniser_path)
 
     def prepare_data(self):
