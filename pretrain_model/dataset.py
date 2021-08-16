@@ -57,12 +57,11 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
 
     def prepare_data(self):
         # Build tokeniser
-        vocab_path = os.path.abspath(os.path.join(self.tokeniser_path, 'vocab.json'))
-        merges_path = os.path.abspath(os.path.join(self.tokeniser_path, 'merges.txt'))
         if not os.path.exists(vocab_path) and not os.path.exists(vocab_path):
             self.train_tokeniser()
-        else:
-            self.tokeniser = ByteLevelBPETokenizer(vocab_path, merges_path)
+        self.tokeniser = RobertaTokenizerFast.from_pretrained(
+            self.tokeniser_path,
+            max_len=self.max_length)
 
         # Build datasets
         for ds_name in ['train', 'test', 'valid']:
