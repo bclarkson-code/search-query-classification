@@ -29,7 +29,7 @@ if __name__ == '__main__':
     print(f'Optimal lr: {new_lr}')
 
     # update hparams of the model
-    model.hparams.lr = new_lr
+    classifier.hparams.lr = new_lr
     with open('lr_finder_results.pkl', 'wb') as f:
         pickle.dump(lr_finder.results, f)
 
