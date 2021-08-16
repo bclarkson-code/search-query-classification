@@ -21,7 +21,7 @@ class HistoricalModelDataset(torch.utils.data.Dataset):
         category_idx = self.category.iloc[idx]
         # input_vec = np.concatenate([hist_embedding, hist_label, query_embedding])
 
-        input_vec = hist_label
+        input_vec = np.array(hist_label)
 
         return input_vec, category_idx
 
