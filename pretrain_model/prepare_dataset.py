@@ -35,6 +35,7 @@ if __name__ == '__main__':
     )
     for ds, ds_name in zip(datasets, ['train', 'test', 'valid']):
         file_path = os.path.join(text_ds_dir, f'{ds_name}.txt')
+        ds.to_pickle(f'dataframes/{ds_name}.pkl')
         with open(file_path, 'w') as f:
-            for query in tqdm(df['query_text'], desc=f'Writing {ds_name} queries to file'):
+            for query in tqdm(ds['query_text'], desc=f'Writing {ds_name} queries to file'):
                 f.write(query)
