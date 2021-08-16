@@ -28,6 +28,4 @@ if __name__ == '__main__':
     with open('lr_finder_results.pkl', 'wb') as f:
         pickle.dump(lr_finder.results, f)
 
-    new_lr = lr_finder.suggestion()
-    classifier.hparams.learning_rate = new_lr
     trainer.fit(classifier, inputs)
