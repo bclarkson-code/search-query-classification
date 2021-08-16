@@ -8,4 +8,5 @@ fi
 python3 run_model.py
 zip -r historical-logs.zip historical-model-logs
 gsutil cp historical-logs.zip gs://search-query-classification-us-central1-c
+gsutil cp lr_finder_results.pkl gs://search-query-classification-us-central1-c
 

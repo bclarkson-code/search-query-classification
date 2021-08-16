@@ -4,6 +4,7 @@ from pathlib import Path
 from dataset import HistoricalQueryDataModule
 from pytorch_lightning import loggers as pl_loggers
 import os
+import pickle
 
 if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('historical-model-logs/')
@@ -23,4 +24,10 @@ if __name__ == '__main__':
         val_check_interval=2500,
         default_root_dir='model_save'
     )
+    lr_finder = trainer.tuner.lr_find(classifier)
+    with open('lr_finder_results.pkl', 'wb') as f:
+        pickle.dump(lr_finder.results, f)
+
+    new_lr = lr_finder.suggestion()
+    classifier.hparams.learning_rate = new_lr
     trainer.fit(classifier, inputs)
