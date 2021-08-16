@@ -24,7 +24,7 @@ if __name__ == '__main__':
         val_check_interval=2500,
         default_root_dir='model_save'
     )
-    lr_finder = trainer.tuner.lr_find(classifier, inputs, max_lr=1e2)
+    lr_finder = trainer.tuner.lr_find(classifier, inputs)
     new_lr = lr_finder.suggestion()
     print(f'Optimal lr: {new_lr}')
 
