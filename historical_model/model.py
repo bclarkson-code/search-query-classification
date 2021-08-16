@@ -8,7 +8,7 @@ class HistoricalClassifier(pl.LightningModule):
     def __init__(self, learning_rate=1e-4):
         super().__init__()
         self.classifier = nn.Sequential(
-            nn.Linear((767 * 2 + 16), 512),
+            nn.Linear(16, 512),
             torch.nn.BatchNorm1d(512),
             nn.ReLU(),
             nn.Dropout(p=0.3),
@@ -69,11 +69,14 @@ class HistoricalClassifier(pl.LightningModule):
         )
 
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(self.parameters(), lr=self.learning_rate, momentum=0.9)
-        scheduler = torch.optim.lr_scheduler.CyclicLR(
-            optimizer,
-            base_lr=5e-3, # base and max lr found from lr finder
-            max_lr=1e-1,
-            step_size_up=117039 # batches per epoch
-        )
-        return [optimizer], [scheduler]
+        # optimizer = torch.optim.SGD(self.parameters(), lr=self.learning_rate, momentum=0.9)
+        # scheduler = torch.optim.lr_scheduler.CyclicLR(
+        #     optimizer,
+        #     base_lr=5e-3, # base and max lr found from lr finder
+        #     max_lr=1e-1,
+        #     step_size_up=117039 # batches per epoch
+        # )
+
+        # return [optimizer], [scheduler]
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        return optimizer

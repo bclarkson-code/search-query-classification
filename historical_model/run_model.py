@@ -24,7 +24,12 @@ if __name__ == '__main__':
         val_check_interval=2500,
         default_root_dir='model_save'
     )
-    lr_finder = trainer.tuner.lr_find(classifier, inputs)
+    lr_finder = trainer.tuner.lr_find(classifier, inputs, max_lr=1e2)
+    new_lr = lr_finder.suggestion()
+    print(f'Optimal lr: {new_lr}')
+
+    # update hparams of the model
+    model.hparams.lr = new_lr
     with open('lr_finder_results.pkl', 'wb') as f:
         pickle.dump(lr_finder.results, f)
 
