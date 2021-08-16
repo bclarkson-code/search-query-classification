@@ -5,7 +5,7 @@ from transformers import RobertaTokenizerFast, LineByLineTextDataset, DataCollat
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers import ByteLevelBPETokenizer
 from glob import glob
-
+from pathlib import Path
 
 class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
     def __init__(
