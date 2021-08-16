@@ -24,7 +24,7 @@ if __name__ == '__main__':
         val_check_interval=2500,
         default_root_dir='model_save'
     )
-    lr_finder = trainer.tuner.lr_find(classifier)
+    lr_finder = trainer.tuner.lr_find(classifier, inputs)
     with open('lr_finder_results.pkl', 'wb') as f:
         pickle.dump(lr_finder.results, f)
 
