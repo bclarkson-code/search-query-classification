@@ -23,6 +23,7 @@ if __name__ == '__main__':
     # write the strings to a text file for the pretrain model
     text_ds_dir = 'text_datasets'
     Path(text_ds_dir).mkdir(exist_ok=True)
+    Path('dataframes').mkdir(exist_ok=True)
     train_frac = 0.8
     valid_frac = 0.1
     n_queries = len(df)
