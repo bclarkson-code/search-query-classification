@@ -10,6 +10,7 @@ class HistoricalClassifier(pl.LightningModule):
         self.classifier = nn.Sequential(
             nn.Linear((767 * 2 + 16), 512),
             nn.ReLU(),
+            nn.Dropout(p=0.2),
             nn.Linear(512, 16)
         )
         self.learning_rate = learning_rate

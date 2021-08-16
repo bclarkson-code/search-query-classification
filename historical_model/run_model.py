@@ -20,6 +20,7 @@ if __name__ == '__main__':
         max_epochs=5,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
+        val_check_interval=2500,
         default_root_dir='model_save'
     )
     trainer.fit(classifier, inputs)
