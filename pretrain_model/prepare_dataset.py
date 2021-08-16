@@ -34,7 +34,8 @@ if __name__ == '__main__':
             int((train_frac + valid_frac) * n_queries)
         ]
     )
-    for ds, ds_name in zip(datasets, ['train', 'test', 'valid']):
+    datasets.append(df)
+    for ds, ds_name in zip(datasets, ['train', 'test', 'valid', 'all']):
         file_path = os.path.join(text_ds_dir, f'{ds_name}.txt')
         ds.to_pickle(f'dataframes/{ds_name}.pkl')
         with open(file_path, 'w') as f:
