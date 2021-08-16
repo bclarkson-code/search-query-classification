@@ -38,9 +38,9 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.data_collator = None
 
     def train_tokeniser(self):
-        self.tokenizer = ByteLevelBPETokenizer(lowercase=True)
-        self.tokenizer.pre_tokenizer = Whitespace()
-        self.tokenizer.train(
+        self.tokeniser = ByteLevelBPETokenizer(lowercase=True)
+        self.tokeniser.pre_tokenizer = Whitespace()
+        self.tokeniser.train(
             files=glob(f'{self.data_path}/all.txt'),
             vocab_size=50000,
             min_frequency=2,
@@ -53,7 +53,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 "<mask>",
             ])
         Path(self.tokeniser_path).mkdir(exist_ok=True)
-        self.tokenizer.save_model(self.tokeniser_path)
+        self.tokeniser.save_model(self.tokeniser_path)
 
     def prepare_data(self):
         # Build tokeniser
