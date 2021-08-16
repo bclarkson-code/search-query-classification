@@ -40,4 +40,4 @@ if __name__ == '__main__':
         ds.to_pickle(f'dataframes/{ds_name}.pkl')
         with open(file_path, 'w') as f:
             for query in tqdm(ds['query_text'], desc=f'Writing {ds_name} queries to file'):
-                f.write(query)
+                f.write(query + '\n')
