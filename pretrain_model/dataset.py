@@ -4,12 +4,13 @@ import os
 from transformers import RobertaTokenizerFast, LineByLineTextDataset, DataCollatorForLanguageModeling
 from tokenizers.pre_tokenizers import Whitespace
 from tokenizers import ByteLevelBPETokenizer
+from glob import glob
 
 
 class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
     def __init__(
             self,
-            data_path: str = "raw_queries.txt",
+            data_path: str = "text_datasets",
             tokeniser_path: str = "tokeniser",
             batch_size: int = 128,
             num_workers: int = None,
@@ -40,7 +41,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokenizer = ByteLevelBPETokenizer(lowercase=True)
         self.tokenizer.pre_tokenizer = Whitespace()
         self.tokenizer.train(
-            files=[self.data_path],
+            files=glob(f'{self.data_path}/*'),
             vocab_size=50000,
             min_frequency=2,
             show_progress=True,
