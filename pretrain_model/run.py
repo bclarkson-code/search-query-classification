@@ -36,7 +36,7 @@ if __name__ == '__main__':
         mode='min',
     )
     trainer = pl.Trainer(
-        tpu_cores=N_DEVICES,
+        gpus=4,
         max_epochs=3,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
