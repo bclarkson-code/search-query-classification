@@ -8,7 +8,6 @@ class HistoricalClassifier(pl.LightningModule):
     def __init__(self, learning_rate=1e-4):
         super().__init__()
         self.classifier = nn.Sequential(
-            nn.Dropout(p=0.3),
             nn.Linear((767 * 2 + 16), 512),
             torch.nn.BatchNorm1d(512),
             nn.ReLU(),
