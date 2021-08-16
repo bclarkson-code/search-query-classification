@@ -69,4 +69,4 @@ class HistoricalClassifier(pl.LightningModule):
         )
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        return torch.optim.SGD(self.parameters(), lr=self.learning_rate, momentum=0.9)
