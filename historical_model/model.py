@@ -8,7 +8,7 @@ class HistoricalClassifier(pl.LightningModule):
     def __init__(self, learning_rate=1e-4):
         super().__init__()
         self.classifier = nn.Sequential(
-            nn.Linear(16, 512),
+            nn.Linear(15, 512),
             torch.nn.BatchNorm1d(512),
             nn.ReLU(),
             nn.Dropout(p=0.3),
@@ -47,7 +47,6 @@ class HistoricalClassifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        print(x.shape, y.shape)
         pred = self(x)
         loss = self.loss_fn(pred, y)
         self.log(
