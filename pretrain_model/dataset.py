@@ -41,7 +41,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokenizer = ByteLevelBPETokenizer(lowercase=True)
         self.tokenizer.pre_tokenizer = Whitespace()
         self.tokenizer.train(
-            files=glob(f'{self.data_path}/all_data.txt'),
+            files=glob(f'{self.data_path}/all.txt'),
             vocab_size=50000,
             min_frequency=2,
             show_progress=True,
