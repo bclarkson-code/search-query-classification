@@ -18,12 +18,6 @@ class HistoricalClassifier(pl.LightningModule):
         self.loss_fn = nn.CrossEntropyLoss()
         self.train_acc = torchmetrics.Accuracy()
         self.valid_acc = torchmetrics.Accuracy()
-        self.automatic_optimization = False
-        self.lr_scheduler = torch.optim.lr_scheduler.CyclicLR(
-            base_lr=5e-3,
-            max_lr=1e-1,
-            step_size_up=117039 * 2,
-        )
 
     def forward(self, x):
         return self.classifier(x)
@@ -76,5 +70,10 @@ class HistoricalClassifier(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.SGD(self.parameters(), lr=self.learning_rate, momentum=0.9)
-        scheduler = self.lr_scheduler(optimizer)
+        scheduler = torch.optim.lr_scheduler.CyclicLR(
+            optimizer,
+            base_lr=5e-3, # base and max lr found from lr finder
+            max_lr=1e-1,
+            step_size_up=117039 # batches per epoch
+        )
         return [optimizer], [scheduler]
