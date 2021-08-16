@@ -57,7 +57,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
 
     def prepare_data(self):
         # Build tokeniser
-        if not os.path.exists(vocab_path) and not os.path.exists(vocab_path):
+        if not os.path.exists(self.tokeniser_path):
             self.train_tokeniser()
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
             self.tokeniser_path,
