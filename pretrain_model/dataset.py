@@ -106,7 +106,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             max_len=self.max_length,
         )
         self.data_collator = DataCollatorForLanguageModeling(
-            tokenizer=self.tokeniser,
             mlm=True,
             mlm_probability=self.mlm_probability
         )
