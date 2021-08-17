@@ -69,11 +69,20 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             if ds is None:
                 print(f'Reading {ds_name.capitalize()} Data...', end='')
                 ds_file = os.path.join(self.data_path, f'{ds_name}.txt')
-                self.__dict__[ds_name] = LineByLineTextDataset(
-                    tokenizer=self.tokeniser,
-                    file_path=ds_file,
-                    block_size=128,
-                )
+                self.__dict__[ds_name] = load_dataset(
+                    "text",
+                    data_files=ds_file,
+                    split=ds_name)
+                print(self.__dict__[ds_name])
+                self.__dict__[ds_name] = self.__dict__[ds_name].map(
+                    lambda ex: self.tokenizer(
+                        ex["text"],
+                        add_special_tokens=True,
+                        truncation=True,
+                        max_length=self.max_length),
+                    batched=True)
+                self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
+                                                                         'attention_mask'])
                 print('Done')
 
     def setup(self, stage=None):
