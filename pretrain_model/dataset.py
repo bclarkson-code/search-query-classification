@@ -62,10 +62,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         # Build tokeniser
         if not os.path.exists(self.tokeniser_path):
             self.train_tokeniser()
-        self.tokeniser = RobertaTokenizerFast.from_pretrained(
-            self.tokeniser_path,
-            max_len=self.max_length,
-        )
 
         # Build datasets
         for ds_name in ['train', 'test', 'valid']:
@@ -78,20 +74,22 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                     data_files=ds_file,
                     split=['train'])[0]
                 print(self.__dict__[ds_name])
-                # self.__dict__[ds_name] = self.__dict__[ds_name].map(
-                #     lambda ex: self.tokeniser(
-                #         ex["text"],
-                #         add_special_tokens=True,
-                #         truncation=True,
-                #         max_length=self.max_length),
-                #     batched=True)
-                # self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
-                #                                                          'attention_mask'])
+                self.__dict__[ds_name] = self.__dict__[ds_name].map(
+                    lambda ex: self.tokeniser(
+                        ex["text"],
+                        add_special_tokens=True,
+                        truncation=True,
+                        max_length=self.max_length),
+                    batched=True)
+                self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
+                                                                         'attention_mask'])
                 print('Done')
 
     def setup(self, stage=None):
-        self.tokeniser.mask_token = '<mask>'
-        print(self.tokeniser.mask_token)
+        self.tokeniser = RobertaTokenizerFast.from_pretrained(
+            self.tokeniser_path,
+            max_len=self.max_length,
+        )
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokeniser,
             mlm=True,
