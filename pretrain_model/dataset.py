@@ -76,7 +76,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                     split=ds_name)
                 print(self.__dict__[ds_name])
                 self.__dict__[ds_name] = self.__dict__[ds_name].map(
-                    lambda ex: self.tokenizer(
+                    lambda ex: self.tokeniser(
                         ex["text"],
                         add_special_tokens=True,
                         truncation=True,
