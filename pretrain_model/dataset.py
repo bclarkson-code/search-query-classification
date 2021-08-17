@@ -64,7 +64,9 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             self.train_tokeniser()
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
             self.tokeniser_path,
-            max_len=self.max_length)
+            max_len=self.max_length,
+            mask_token='<mask>',
+        )
 
         # Build datasets
         for ds_name in ['train', 'test', 'valid']:
