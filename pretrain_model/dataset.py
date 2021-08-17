@@ -74,7 +74,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 truncation=True,
                 max_length=self.max_length),
             batched=True)
-        dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
+        dataset = dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
+        print(dataset)
         dataset.save_to_disk(f'datasets/{dataset_path}')
         return dataset
 
