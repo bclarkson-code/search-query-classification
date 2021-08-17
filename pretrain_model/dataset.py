@@ -86,7 +86,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 #         max_length=self.max_length),
                 #     batched=True)
                 # self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
-                                                                         'attention_mask'])
+                #                                                          'attention_mask'])
                 print('Done')
 
     def setup(self, stage=None):
