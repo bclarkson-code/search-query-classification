@@ -71,7 +71,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokeniser.save_model(self.tokeniser_path)
 
     def prepare_dataset(self, dataset_path):
-        ds_file = os.path.join(self.data_path, 'debug.txt')#f'{dataset_path}.txt')
+        ds_file = os.path.join(self.data_path, f'{dataset_path}.txt')
         dataset = load_dataset(
             "text",
             data_files=ds_file,
