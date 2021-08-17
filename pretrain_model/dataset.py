@@ -110,7 +110,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokeniser,
             mlm=True,
-            mlm_probability=self.mlm_probability
+            mlm_probability=self.mlm_probability,
+            pad_to_multiple_of=24
         )
 
     def train_dataloader(self):
