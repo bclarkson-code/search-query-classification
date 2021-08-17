@@ -86,6 +86,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
 
         # Build datasets
         self.train = self.prepare_dataset('train.txt')
+        self.train.save('datasets/train_ds')
         self.valid = self.prepare_dataset('valid.txt')
         self.test = self.prepare_dataset('test.txt')
 
