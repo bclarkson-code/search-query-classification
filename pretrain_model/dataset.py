@@ -67,13 +67,13 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             "text",
             data_files=ds_file,
             split=['train'])[0]
-        # dataset = dataset.map(
-        #     lambda ex: self.tokeniser(
-        #         ex["text"],
-        #         add_special_tokens=True,
-        #         truncation=True,
-        #         max_length=self.max_length),
-        #     batched=True)
+        dataset = dataset.map(
+            lambda ex: self.tokeniser(
+                ex["text"],
+                add_special_tokens=True,
+                truncation=True,
+                max_length=self.max_length),
+            batched=True)
         # dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
         dataset.save_to_disk(f'datasets/{dataset_path}')
         return dataset
