@@ -86,6 +86,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
             self.tokeniser_path,
             max_len=self.max_length,
+            truncation=True,
+            padding='max_length'
         )
         if not os.path.exists(f'datasets/train'):
             self.train = self.prepare_dataset('train')
