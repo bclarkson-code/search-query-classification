@@ -35,9 +35,9 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         else:
             self.num_workers = num_workers
         self.tokeniser = None
-        self.train = None
-        self.test = None
-        self.valid = None
+        self.train = self.prepare_dataset('train.txt')
+        self.valid = self.prepare_dataset('valid.txt')
+        self.test = self.prepare_dataset('test.txt')
         self.data_collator = None
 
     def train_tokeniser(self):
@@ -83,12 +83,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             self.tokeniser_path,
             max_len=self.max_length,
         )
-
-        # Build datasets
-        self.train = self.prepare_dataset('train.txt')
-        self.train.save('datasets/train_ds')
-        self.valid = self.prepare_dataset('valid.txt')
-        self.test = self.prepare_dataset('test.txt')
 
         print(f'Train: {self.train}')
         print(f'Valid: {self.valid}')
