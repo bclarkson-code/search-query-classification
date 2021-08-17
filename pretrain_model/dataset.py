@@ -88,11 +88,11 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             max_len=self.max_length,
         )
         if not os.path.exists(f'datasets/train'):
-            self.train = self.prepare_dataset('train')
+            self.train = self.prepare_dataset('debug')
         if not os.path.exists(f'datasets/valid'):
-            self.train = self.prepare_dataset('valid')
+            self.train = self.prepare_dataset('debug')
         if not os.path.exists(f'datasets/test'):
-            self.train = self.prepare_dataset('test')
+            self.train = self.prepare_dataset('debug')
 
         print(f'Train: {self.train}')
         print(f'Valid: {self.valid}')
