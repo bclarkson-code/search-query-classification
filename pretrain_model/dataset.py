@@ -101,14 +101,17 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
     def train_dataloader(self):
-        return DataLoader(
-            self.train,
+        dl = DataLoader(
+            self.valid,
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
             shuffle=True,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers
         )
+        print(f'DataLoader: {dl}')
+        print(f'DataLoader: {dl.dataset}')
+        return dl
 
     def val_dataloader(self):
         dl = DataLoader(
