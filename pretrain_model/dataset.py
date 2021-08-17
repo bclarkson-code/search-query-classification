@@ -6,6 +6,7 @@ from tokenizers.pre_tokenizers import Whitespace
 from tokenizers import ByteLevelBPETokenizer
 from glob import glob
 from pathlib import Path
+from datasets import load_dataset
 
 class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
     def __init__(
