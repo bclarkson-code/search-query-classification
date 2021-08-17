@@ -61,14 +61,11 @@ class RobertaForPretraining(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        print('Validation_step - Start')
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         labels = batch['labels']
 
-        print('Validation_step - loss')
         loss = self(input_ids, attention_mask, labels)['loss']
-        print('Validation_step - metrics')
         self.log(
             'valid/loss',
             loss,
@@ -76,7 +73,6 @@ class RobertaForPretraining(pl.LightningModule):
             on_epoch=True,
             sync_dist=True
         )
-        print('Validation_step - Done')
         return loss
 
     def test_step(self, batch, batch_idx):
