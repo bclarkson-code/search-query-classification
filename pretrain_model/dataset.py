@@ -101,7 +101,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
     def train_dataloader(self):
-        print(self.train)
+        print(f'self.train: {self.train}')
         dl = DataLoader(
             self.train,
             batch_size=self.batch_size,
@@ -110,8 +110,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers
         )
-        print(f'DataLoader: {dl}')
-        print(f'DataLoader: {dl.dataset}')
+        print(f'Train DataLoader: {dl}')
+        print(f'Train DataSet: {dl.dataset}')
         return dl
 
     def val_dataloader(self):
