@@ -42,6 +42,6 @@ if __name__ == '__main__':
         logger=tb_logger,
         auto_lr_find=True,
         callbacks=checkpoint_callback,
-        # val_check_interval=1000,
+        val_check_interval=1000,
     )
     trainer.fit(model, queries)

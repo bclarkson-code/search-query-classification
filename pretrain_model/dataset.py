@@ -69,7 +69,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             ds = self.__dict__[ds_name]
             if ds is None:
                 print(f'Reading {ds_name.capitalize()} Data...', end='')
-                ds_file = os.path.join(self.data_path, f'{ds_name}.txt')
+                ds_file = os.path.join(self.data_path, 'valid.txt')#f'{ds_name}.txt')
                 self.__dict__[ds_name] = load_dataset(
                     "text",
                     data_files=ds_file,
