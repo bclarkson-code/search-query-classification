@@ -35,7 +35,8 @@ if __name__ == '__main__':
         ]
     )
     datasets.append(df)
-    for ds, ds_name in zip(datasets, ['train', 'test', 'valid', 'all']):
+    datasets.append(df.sample(n=1000))
+    for ds, ds_name in zip(datasets, ['train', 'test', 'valid', 'all', 'debug']):
         file_path = os.path.join(text_ds_dir, f'{ds_name}.txt')
         ds.to_pickle(f'dataframes/{ds_name}.pkl')
         with open(file_path, 'w') as f:
