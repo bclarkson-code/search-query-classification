@@ -104,6 +104,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
             self.tokeniser_path,
             max_len=self.max_length,
+            truncation=True,
+            padding='max_length'
         )
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokeniser,
