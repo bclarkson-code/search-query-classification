@@ -17,7 +17,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             num_workers: int = None,
             max_length: int = 24,
             mlm_probability: float = 0.15,
-            debug=False
+            debug=False,
+            persistent_workers=False,
 
     ):
 
@@ -28,6 +29,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.max_length = max_length
         self.mlm_probability = mlm_probability
         self.debug = debug
+        self.persistent_workers = persistent_workers
         if num_workers is None:
             self.num_workers = os.cpu_count()
         else:
@@ -99,7 +101,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
             shuffle=True,
-            num_workers=self.num_workers
+            num_workers=self.num_workers,
+            persistent_workers=self.persistent_workers
         )
 
     def val_dataloader(self):
@@ -108,7 +111,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
             shuffle=False,
-            num_workers=self.num_workers
+            num_workers=self.num_workers,
+            persistent_workers=self.persistent_workers
         )
 
     def test_dataloader(self):
@@ -117,7 +121,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
             shuffle=False,
-            num_workers=self.num_workers
+            num_workers=self.num_workers,
+            persistent_workers=self.persistent_workers
         )
 
 if __name__ == '__main__':
