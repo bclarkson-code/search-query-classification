@@ -77,16 +77,16 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                     "text",
                     data_files=ds_file,
                     split=['train'])[0]
-                print(self.__dict__[ds_name])
-                self.__dict__[ds_name] = self.__dict__[ds_name].map(
-                    lambda ex: self.tokeniser(
-                        ex["text"],
-                        add_special_tokens=True,
-                        truncation=True,
-                        max_length=self.max_length),
-                    batched=True)
-                self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
-                                                                         'attention_mask'])
+                # print(self.__dict__[ds_name])
+                # self.__dict__[ds_name] = self.__dict__[ds_name].map(
+                #     lambda ex: self.tokeniser(
+                #         ex["text"],
+                #         add_special_tokens=True,
+                #         truncation=True,
+                #         max_length=self.max_length),
+                #     batched=True)
+                # self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
+                #                                                          'attention_mask'])
                 print('Done')
 
     def setup(self, stage=None):
@@ -111,7 +111,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
     def val_dataloader(self):
-        dl = DataLoader(
+        return DataLoader(
             self.valid,
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
@@ -119,9 +119,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers
         )
-        print(dl)
-        print(len(dl))
-        return dl
 
     def test_dataloader(self):
         return DataLoader(
