@@ -23,7 +23,8 @@ if __name__ == '__main__':
     queries = SearchQueryPreTrainingDataModule(
         batch_size=128,
         debug=True,
-        num_workers=0,
+        num_workers=os.cpu_count(),
+        persistent_workers=True
     )
     model = RobertaForPretraining(
         lr=5e-5
@@ -42,6 +43,7 @@ if __name__ == '__main__':
         logger=tb_logger,
         auto_lr_find=True,
         callbacks=checkpoint_callback,
-        val_check_interval=1000,
+        val_check_interval=2500,
+        accelerator='ddp',
     )
     trainer.fit(model, queries)
