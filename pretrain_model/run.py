@@ -37,13 +37,12 @@ if __name__ == '__main__':
         mode='min',
     )
     trainer = pl.Trainer(
-        gpus=4,
+        tpu_cores=8,
         max_epochs=3,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
         auto_lr_find=True,
         callbacks=checkpoint_callback,
-        val_check_interval=2500,
         accelerator='ddp',
     )
     trainer.fit(model, queries)

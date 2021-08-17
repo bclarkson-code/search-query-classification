@@ -18,7 +18,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             max_length: int = 24,
             mlm_probability: float = 0.15,
             debug=False,
-            persistent_workers=False,
+            persistent_workers=True,
 
     ):
 
