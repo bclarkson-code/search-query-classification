@@ -90,6 +90,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 print('Done')
 
     def setup(self, stage=None):
+        self.tokeniser.mask_token = '<mask>'
+        print(self.tokeniser.mask_token)
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokeniser,
             mlm=True,
