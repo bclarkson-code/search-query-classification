@@ -121,6 +121,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
     def test_dataloader(self):
+        print(len(self.test))
         return DataLoader(
             self.test,
             batch_size=self.batch_size,
