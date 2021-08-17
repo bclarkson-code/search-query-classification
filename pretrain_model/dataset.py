@@ -58,6 +58,23 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         Path(self.tokeniser_path).mkdir(exist_ok=True)
         self.tokeniser.save_model(self.tokeniser_path)
 
+    def prepare_dataset(self, dataset_path):
+        ds_file = os.path.join(self.data_path, 'debug.txt')#f'{dataset_path}.txt')
+        dataset = load_dataset(
+            "text",
+            data_files=ds_file,
+            split=['train'])[0]
+        dataset = dataset.map(
+            lambda ex: self.tokeniser(
+                ex["text"],
+                add_special_tokens=True,
+                truncation=True,
+                max_length=self.max_length),
+            batched=True)
+        dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
+        return dataset
+
+
     def prepare_data(self):
         # Build tokeniser
         if not os.path.exists(self.tokeniser_path):
@@ -68,26 +85,13 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
         # Build datasets
-        for ds_name in ['train', 'test', 'valid']:
-            ds = self.__dict__[ds_name]
-            if ds is None:
-                print(f'Reading {ds_name.capitalize()} Data...', end='')
-                ds_file = os.path.join(self.data_path, 'debug.txt')#f'{ds_name}.txt')
-                self.__dict__[ds_name] = load_dataset(
-                    "text",
-                    data_files=ds_file,
-                    split=['train'])[0]
-                print(self.__dict__[ds_name])
-                self.__dict__[ds_name] = self.__dict__[ds_name].map(
-                    lambda ex: self.tokeniser(
-                        ex["text"],
-                        add_special_tokens=True,
-                        truncation=True,
-                        max_length=self.max_length),
-                    batched=True)
-                self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
-                                                                         'attention_mask'])
-                print('Done')
+        self.train = self.prepare_dataset('train.txt')
+        self.valid = self.prepare_dataset('valid.txt')
+        self.test = self.prepare_dataset('test.txt')
+
+        print(f'Train: {self.train}')
+        print(f'Valid: {self.valid}')
+        print(f'Test: {self.test}')
 
     def setup(self, stage=None):
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
