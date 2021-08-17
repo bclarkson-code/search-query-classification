@@ -35,11 +35,11 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         else:
             self.num_workers = num_workers
         self.tokeniser = None
-        self.train = load_from_disk(f'datasets/debug') if os.path.exists(f'datasets/train') else \
+        self.train = load_from_disk(f'datasets/train') if os.path.exists(f'datasets/train') else \
             None
-        self.valid = load_from_disk(f'datasets/debug') if os.path.exists(f'datasets/valid') else \
+        self.valid = load_from_disk(f'datasets/valid') if os.path.exists(f'datasets/valid') else \
             None
-        self.test = load_from_disk(f'datasets/debug') if os.path.exists(f'datasets/test') else \
+        self.test = load_from_disk(f'datasets/test') if os.path.exists(f'datasets/test') else \
             None
         self.data_collator = None
 
@@ -75,7 +75,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 max_length=self.max_length),
             batched=True)
         dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
-        dataset.save_to_disk(f'datasets/debug') #{dataset_path}')
+        dataset.save_to_disk(f'datasets/{dataset_path}')
         return dataset
 
 
@@ -90,9 +90,9 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         if not os.path.exists(f'datasets/train'):
             self.train = self.prepare_dataset('debug')
         if not os.path.exists(f'datasets/valid'):
-            self.train = self.prepare_dataset('debug')
+            self.valid = self.prepare_dataset('debug')
         if not os.path.exists(f'datasets/test'):
-            self.train = self.prepare_dataset('debug')
+            self.test = self.prepare_dataset('debug')
 
         print(f'Train: {self.train}')
         print(f'Valid: {self.valid}')
