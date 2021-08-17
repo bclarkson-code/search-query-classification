@@ -78,14 +78,14 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                     data_files=ds_file,
                     split=['train'])[0]
                 print(self.__dict__[ds_name])
-                self.__dict__[ds_name] = self.__dict__[ds_name].map(
-                    lambda ex: self.tokeniser(
-                        ex["text"],
-                        add_special_tokens=True,
-                        truncation=True,
-                        max_length=self.max_length),
-                    batched=True)
-                self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
+                # self.__dict__[ds_name] = self.__dict__[ds_name].map(
+                #     lambda ex: self.tokeniser(
+                #         ex["text"],
+                #         add_special_tokens=True,
+                #         truncation=True,
+                #         max_length=self.max_length),
+                #     batched=True)
+                # self.__dict__[ds_name].set_format(type='torch', columns=['input_ids',
                                                                          'attention_mask'])
                 print('Done')
 
@@ -105,7 +105,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             collate_fn=self.data_collator,
             shuffle=True,
             num_workers=self.num_workers,
-            # persistent_workers=self.persistent_workers
+            persistent_workers=self.persistent_workers
         )
 
     def val_dataloader(self):
@@ -115,7 +115,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             collate_fn=self.data_collator,
             shuffle=False,
             num_workers=self.num_workers,
-            # persistent_workers=self.persistent_workers
+            persistent_workers=self.persistent_workers
         )
 
     def test_dataloader(self):
@@ -125,7 +125,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             collate_fn=self.data_collator,
             shuffle=False,
             num_workers=self.num_workers,
-            # persistent_workers=self.persistent_workers
+            persistent_workers=self.persistent_workers
         )
 
 if __name__ == '__main__':
