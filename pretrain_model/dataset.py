@@ -62,7 +62,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokeniser.save_model(self.tokeniser_path)
 
     def prepare_dataset(self, dataset_path):
-        ds_file = os.path.join(self.data_path, f'{dataset_path}.txt')
+        ds_file = os.path.join(self.data_path, 'debug.txt')#f'{dataset_path}.txt')
         dataset = load_dataset(
             "text",
             data_files=ds_file,
@@ -88,11 +88,11 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             max_len=self.max_length,
         )
         if not os.path.exists(f'datasets/train'):
-            self.train = self.prepare_dataset('debug')
+            self.train = self.prepare_dataset('train')
         if not os.path.exists(f'datasets/valid'):
-            self.valid = self.prepare_dataset('debug')
+            self.valid = self.prepare_dataset('valid')
         if not os.path.exists(f'datasets/test'):
-            self.test = self.prepare_dataset('debug')
+            self.test = self.prepare_dataset('test')
 
         print(f'Train: {self.train}')
         print(f'Valid: {self.valid}')
