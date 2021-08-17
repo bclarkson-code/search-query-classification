@@ -6,7 +6,7 @@ from tokenizers.pre_tokenizers import Whitespace
 from tokenizers import ByteLevelBPETokenizer
 from glob import glob
 from pathlib import Path
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 
 class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
     def __init__(
@@ -35,9 +35,12 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         else:
             self.num_workers = num_workers
         self.tokeniser = None
-        self.train = self.prepare_dataset('train.txt')
-        self.valid = self.prepare_dataset('valid.txt')
-        self.test = self.prepare_dataset('test.txt')
+        self.train = load_from_disk(f'datasets/train') if os.path.exists(f'datasets/train') else \
+            None
+        self.valid = load_from_disk(f'datasets/valid') if os.path.exists(f'datasets/valid') else \
+            None
+        self.test = load_from_disk(f'datasets/test') if os.path.exists(f'datasets/test') else \
+            None
         self.data_collator = None
 
     def train_tokeniser(self):
@@ -59,7 +62,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         self.tokeniser.save_model(self.tokeniser_path)
 
     def prepare_dataset(self, dataset_path):
-        ds_file = os.path.join(self.data_path, 'debug.txt')#f'{dataset_path}.txt')
+        ds_file = os.path.join(self.data_path, f'{dataset_path}.txt')
         dataset = load_dataset(
             "text",
             data_files=ds_file,
@@ -72,6 +75,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 max_length=self.max_length),
             batched=True)
         dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
+        dataset.save_to_disk(f'datasets/{dataset_path}')
         return dataset
 
 
