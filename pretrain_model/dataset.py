@@ -73,7 +73,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
                 self.__dict__[ds_name] = load_dataset(
                     "text",
                     data_files=ds_file,
-                    split=ds_name)
+                    split=['train'])
                 print(self.__dict__[ds_name])
                 self.__dict__[ds_name] = self.__dict__[ds_name].map(
                     lambda ex: self.tokeniser(
