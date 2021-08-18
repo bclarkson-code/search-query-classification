@@ -86,7 +86,7 @@ class TextDataset(Dataset):
                 ),
                 batched=True,
                 batch_size=1000000,
-                num_proc=os.cpu_count()
+                num_proc=4,
             )
             self.dataset = self.dataset.map(
                 self._encode
