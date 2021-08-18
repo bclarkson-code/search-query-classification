@@ -12,7 +12,7 @@ class Downloader(object):
     def __init__(self, data_dir='datasets'):
         self.data_dir = data_dir
 
-    def download(self):
+    def download_datasets(self):
         Path('raw_dataset').mkdir(exist_ok=True)
 
         # Download the raw dataset from google cloud storage
@@ -41,6 +41,26 @@ class Downloader(object):
         datasets.append(df.sample(n=1000))
         for ds, ds_name in zip(datasets, ['train', 'test', 'valid', 'all', 'debug']):
             ds.to_pickle(f'dataframes/{ds_name}.pkl')
+
+    def download_tokeniser(self):
+        # Download the tokeniser zip file from google cloud storage
+        cmd = shlex.split(
+            'gsutil -m cp gs://search-query-classification-europe-west4-a/tokeniser.zip .'
+        )
+        print(subprocess.check_output(
+            cmd,
+            stderr=subprocess.STDOUT).decode('utf-8')
+              )
+
+        # unzip the tokeniser folder
+        cmd = shlex.split(
+            'unzip tokeniser.zip'
+        )
+        print(subprocess.check_output(
+            cmd,
+            stderr=subprocess.STDOUT).decode('utf-8')
+              )
+
 
 class TextDataset(Dataset):
     def __init__(self,
@@ -84,6 +104,7 @@ class EmbedderData(pl.LightningDataModule):
             encoding: dict = {},
             max_length: int = 24,
             pretrain_path='~/search-query-classification/pretrain_model',
+            tokeniser_string='tokeniser',
             classes=['TRACK', 'EPISODE', 'PLAYLIST_V2', 'ALBUM', 'ARTIST', 'SHOW', 'USER']
 
     ):
@@ -94,16 +115,18 @@ class EmbedderData(pl.LightningDataModule):
         self.num_workers = num_workers
         self.max_length = max_length
         self.pretrain_path = pretrain_path
+        self.downloader = Downloader()
 
         # Read tokeniser from pretrain model
+        if not os.path.exists(tokeniser_string):
+            self.downloader.download_tokeniser()
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
-            os.path.join(self.pretrain_path, 'tokeniser'),
+            tokeniser_string,
             max_len=self.max_length,
             truncation=True,
             padding='max_length'
         )
 
-        self.downloader = Downloader()
         self.data = {}
         self.classes = classes
         if not encoding:
@@ -114,7 +137,7 @@ class EmbedderData(pl.LightningDataModule):
     def prepare_data(self):
         if not os.path.exists('dataframes'):
             print('Downloading Data...', end='')
-            self.downloader.download()
+            self.downloader.download_datasets()
             print('Done')
 
     def setup(self, stage=None):
