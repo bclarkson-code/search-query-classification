@@ -37,7 +37,7 @@ if __name__ == '__main__':
         mode='min',
     )
     trainer = pl.Trainer(
-        tpu_cores=8,
+        tpu_cores=32,
         max_epochs=3,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
