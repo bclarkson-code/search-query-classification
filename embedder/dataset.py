@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
+import datasets
 
 class Downloader(object):
     def __init__(self, data_dir='datasets'):
@@ -66,34 +67,46 @@ class TextDataset(Dataset):
     def __init__(self,
                  df: pd.DataFrame,
                  tokeniser,
+                 ds_name: str,
                  label_encoding: dict):
-        print('Tokenising...', end='')
+        self.label_encoding = label_encoding
         self.tokeniser = tokeniser
         self.tokeniser.pad_token = self.tokeniser.eos_token
-        text = df['query_text'].to_list()
-        self.tokens = self._tokenise(text)
-        print('Done')
-        self.labels = df['class'].values
-        self.label_encoding = label_encoding
+
+        ds_path = f'datasets/{ds_name}'
+        if not os.path.exists(ds_path):
+            print('Tokenising...', end='')
+            self.dataset = datasets.Dataset.from_pandas(df)
+            self.dataset = self.dataset.map(
+                lambda ex: self._tokenise(ex['query_text'])
+            )
+            self.dataset = self.dataset.map(
+                self.encode
+            )
+            self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
+            self.dataset.save_to_disk(ds_path)
+        else:
+            self.datset = datasets.load_from_disk(ds_path)
 
     def __getitem__(self, idx):
-        keys = ['input_ids', 'attention_mask']
-        tokens = [self.tokens[key][idx] for key in keys]
-        cls = self.label_encoding[self.labels[idx]]
-        return tokens, cls
+        return self.dataset.__getitem__(idx)
+
 
     def __len__(self):
         return len(self.labels)
 
+    def _encode(self, row):
+        row['class'] = self.label_encoding[row['class']]
+        return row
+
     def _tokenise(self, string):
-        tokens = self.tokeniser(
+        return self.tokeniser(
             string,
             padding='max_length',
             truncation=True,
             return_tensors='pt',
             max_length=24
         )
-        return tokens.__dict__['data']
 
 class EmbedderData(pl.LightningDataModule):
     def __init__(
@@ -152,19 +165,22 @@ class EmbedderData(pl.LightningDataModule):
         self.train = TextDataset(
             self.train,
             self.tokeniser,
-            self.encoding
+            label_encoding=self.encoding,
+            ds_name='train',
         )
 
         self.test = TextDataset(
             self.test,
             self.tokeniser,
-            self.encoding
+            label_encoding=self.encoding,
+            ds_name='test',
         )
 
         self.valid = TextDataset(
             self.valid,
             self.tokeniser,
-            self.encoding
+            label_encoding=self.encoding,
+            ds_name='valid',
         )
 
     def train_dataloader(self):
