@@ -9,11 +9,11 @@ import torchmetrics
 class RobertaForPretraining(pl.LightningModule):
     def __init__(
             self,
-            lr: float = 1e-4,
+            lr: float = 6e-4,
             adam_epsilon: float = 1e-6,
             adam_beta_1: float = 0.9,
             adam_beta_2: float = 0.98,
-            weight_decay: float = 0.1,
+            weight_decay: float = 0.01,
             vocab_size: float = 49739,
             max_position_embeddings: float = 514,
             num_attention_heads: float = 12,
@@ -90,8 +90,24 @@ class RobertaForPretraining(pl.LightningModule):
         )
         return loss
 
+    def get_linear_schedule_with_warmup_with_peak(
+            self,
+            optimizer,
+            num_warmup_steps,
+            num_training_steps,
+            init_lr,
+            peak_lr, last_epoch=-1
+    ):
+            def lr_lambda(current_step):
+                if current_step < num_warmup_steps:
+                    return (float(current_step) / float(max(1, num_warmup_steps)))*(peak_lr/init_lr)
+                return max(
+                    0.0, float(num_training_steps - current_step) / float(max(1, num_training_steps - num_warmup_steps))
+                )
+        return LambdaLR(optimizer, lr_lambda, last_epoch)
+
     def configure_optimizers(self):
-        return optim.Adam(
+        optimiser = optim.Adam(
             self.parameters(),
             lr=self.learning_rate,
             betas=(
@@ -101,3 +117,15 @@ class RobertaForPretraining(pl.LightningModule):
             eps=self.adam_params['epsilon'],
             weight_decay=self.weight_decay
         )
+        scheduler = self.get_linear_schedule_with_warmup_with_peak(
+            optimizer=optimiser,
+            num_warmup_steps=1000,
+            num_training_steps=120000,
+            init_lr=0.0,
+            peak_lr=6e-4,
+        )
+        return {
+            'optimizer': optimiser,
+            'lr_scheduler': scheduler,
+            'interval': 'step',
+        }
