@@ -95,12 +95,11 @@ class RobertaForPretraining(pl.LightningModule):
         optimizer,
         num_warmup_steps,
         num_training_steps,
-        init_lr,
         peak_lr, last_epoch=-1
     ):
         def lr_lambda(current_step):
             if current_step < num_warmup_steps:
-                return (float(current_step) / float(max(1, num_warmup_steps)))*(peak_lr/init_lr)
+                return (float(current_step) / float(max(1, num_warmup_steps)))*peak_lr
             return max(
                 0.0, float(num_training_steps - current_step) / float(max(1, num_training_steps - num_warmup_steps))
             )
@@ -121,7 +120,6 @@ class RobertaForPretraining(pl.LightningModule):
             optimizer=optimiser,
             num_warmup_steps=1000,
             num_training_steps=120000,
-            init_lr=0.0,
             peak_lr=6e-4,
         )
         return {
