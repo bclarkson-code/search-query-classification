@@ -141,12 +141,13 @@ class EmbedderData(pl.LightningDataModule):
             print('Done')
 
     def setup(self, stage=None):
-        self.train = pd.read_pickle('dataframes/train.pkl')
-        self.valid = pd.read_pickle('dataframes/valid.pkl')
-        self.test = pd.read_pickle('dataframes/test.pkl')
-        print(f'Train data: {len(train)} lines')
-        print(f'Test data: {len(test)} lines')
-        print(f'Valid data: {len(valid)} lines')
+        if 'train' not in self.__dict__:
+            self.train = pd.read_pickle('dataframes/train.pkl')
+            self.valid = pd.read_pickle('dataframes/valid.pkl')
+            self.test = pd.read_pickle('dataframes/test.pkl')
+        print(f'Train data: {len(self.train)} lines')
+        print(f'Test data: {len(self.test)} lines')
+        print(f'Valid data: {len(self.valid)} lines')
 
         self.train = TextDataset(
             train,
