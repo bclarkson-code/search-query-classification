@@ -36,17 +36,20 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             self.num_workers = num_workers
         self.tokeniser = None
         if os.path.exists(f'datasets/train'):
-            self.train = load_from_disk(f'datasets/train').set_format(type='torch', columns=[
+            self.train = load_from_disk(f'datasets/train')
+            sself.train.set_format(type='torch', columns=[
                 'input_ids', 'attention_mask'])
         else:
             self.train = None
         if os.path.exists(f'datasets/valid'):
-            self.valid = load_from_disk(f'datasets/valid').set_format(type='torch', columns=[
+            self.valid = load_from_disk(f'datasets/valid')
+            self.valid.set_format(type='torch', columns=[
                 'input_ids', 'attention_mask'])
         else:
             self.valid = None
         if os.path.exists(f'datasets/test'):
-            self.test = load_from_disk(f'datasets/test').set_format(type='torch', columns=[
+            self.test = load_from_disk(f'datasets/test')
+            self.test.set_format(type='torch', columns=[
                 'input_ids', 'attention_mask'])
         else:
             self.test = None
@@ -116,7 +119,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             truncation=True,
             padding='max_length'
         )
-        print(help(DataCollatorForLanguageModeling))
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokeniser,
             mlm=True,
