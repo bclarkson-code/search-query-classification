@@ -16,18 +16,18 @@ if __name__ == '__main__':
     print(f'dataset_path: {dataset.__file__}')
     tb_logger = pl_loggers.TensorBoardLogger('pretrain-logs/')
     N_DEVICES = 8
-    lr = 5e-5
-    batch_size = 128
+    lr = 4e-4
+    batch_size = 1024
     print(f'lr: {lr}')
     print(f'batch_size: {batch_size}')
     queries = SearchQueryPreTrainingDataModule(
-        batch_size=128,
+        batch_size=batch_size,
         debug=True,
         num_workers=os.cpu_count(),
         persistent_workers=True
     )
     model = RobertaForPretraining(
-        lr=5e-5
+        lr=lr
     )
     checkpoint_callback = ModelCheckpoint(
         monitor='valid/loss',
@@ -43,6 +43,8 @@ if __name__ == '__main__':
         logger=tb_logger,
         auto_lr_find=True,
         callbacks=checkpoint_callback,
-        accelerator='ddp',
+        val_check_interval=2500,
+        limit_val_batches=0.1,
+        precision=16,
     )
     trainer.fit(model, queries)

@@ -14,7 +14,7 @@ class RobertaForPretraining(pl.LightningModule):
             adam_beta_1: float = 0.9,
             adam_beta_2: float = 0.98,
             weight_decay: float = 0.1,
-            vocab_size: float = 52_000,
+            vocab_size: float = 49739,
             max_position_embeddings: float = 514,
             num_attention_heads: float = 12,
             num_hidden_layers: float = 6,
