@@ -84,7 +84,7 @@ class TextDataset(Dataset):
                     truncation=True,
                     max_length=24
                 ),
-                batched=True,
+                batched=False,
                 num_proc=os.cpu_count()
             )
             self.dataset = self.dataset.map(
