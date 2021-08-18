@@ -84,10 +84,11 @@ class TextDataset(Dataset):
                     truncation=True,
                     max_length=24
                 ),
-                batched=True
+                batched=True,
+                num_proc=os.cpu_count()
             )
             self.dataset = self.dataset.map(
-                self.encode
+                self._encode
             )
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
