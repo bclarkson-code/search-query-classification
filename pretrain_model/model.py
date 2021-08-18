@@ -104,7 +104,7 @@ class RobertaForPretraining(pl.LightningModule):
             return max(
                 0.0, float(num_training_steps - current_step) / float(max(1, num_training_steps - num_warmup_steps))
             )
-        return LambdaLR(optimizer, lr_lambda, last_epoch)
+        return torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch)
 
     def configure_optimizers(self):
         optimiser = optim.Adam(
