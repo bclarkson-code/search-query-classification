@@ -133,6 +133,7 @@ class EmbedderData(pl.LightningDataModule):
         else:
             self.encoding = encoding
 
+
     def prepare_data(self):
         if not os.path.exists('dataframes'):
             print('Downloading Data...', end='')
@@ -140,9 +141,9 @@ class EmbedderData(pl.LightningDataModule):
             print('Done')
 
     def setup(self, stage=None):
-        train = pd.read_pickle('dataframes/train.pkl')
-        valid = pd.read_pickle('dataframes/valid.pkl')
-        test = pd.read_pickle('dataframes/test.pkl')
+        self.train = pd.read_pickle('dataframes/train.pkl')
+        self.valid = pd.read_pickle('dataframes/valid.pkl')
+        self.test = pd.read_pickle('dataframes/test.pkl')
         print(f'Train data: {len(train)} lines')
         print(f'Test data: {len(test)} lines')
         print(f'Valid data: {len(valid)} lines')

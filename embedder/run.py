@@ -18,6 +18,7 @@ if __name__ == '__main__':
         num_workers=os.cpu_count(),
     )
     queries.prepare_data()
+    queries.setup()
     weights = queries.calculate_weights()
     classifier = Classifier(
         lr=1e-4,
