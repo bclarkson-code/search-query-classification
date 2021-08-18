@@ -27,12 +27,10 @@ class Classifier(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        self.encoder.eval()
-        with torch.no_grad():
-            embedding = self.encoder(
-                input_ids=input_ids,
-                attention_mask=attention_mask
-            )
+        embedding = self.encoder(
+            input_ids=input_ids,
+            attention_mask=attention_mask
+        )
         return self.classifier(embedding)
 
     def training_step(self, batch, batch_idx):
