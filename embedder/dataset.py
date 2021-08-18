@@ -78,7 +78,13 @@ class TextDataset(Dataset):
             print('Tokenising...', end='')
             self.dataset = datasets.Dataset.from_pandas(df)
             self.dataset = self.dataset.map(
-                lambda ex: self._tokenise(ex['query_text']),
+                lambda ex: self.tokeniser(
+                    ex['query_text'],
+                    padding='max_length',
+                    truncation=True,
+                    return_tensors='pt',
+                    max_length=24
+                ),
                 batched=True
             )
             self.dataset = self.dataset.map(
