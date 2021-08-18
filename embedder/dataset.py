@@ -82,7 +82,6 @@ class TextDataset(Dataset):
                     ex['query_text'],
                     padding='max_length',
                     truncation=True,
-                    return_tensors='pt',
                     max_length=24
                 ),
                 batched=True
