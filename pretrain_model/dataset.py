@@ -36,6 +36,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             self.num_workers = num_workers
         self.tokeniser = None
         if os.path.exists(f'datasets/train'):
+            ds = load_from_disk(f'datasets/train')
+            print(dir(ds))
             self.train = load_from_disk(f'datasets/train').with_format(type='torch', columns=[
                 'input_ids', 'attention_mask'])
         else:
