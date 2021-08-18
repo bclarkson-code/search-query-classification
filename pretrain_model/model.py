@@ -129,6 +129,8 @@ class RobertaForPretraining(pl.LightningModule):
         )
         return {
             'optimizer': optimiser,
-            'lr_scheduler': scheduler,
-            'interval': 'step',
+            'lr_scheduler': {
+                'scheduler': scheduler,
+                'interval': 'step'
+            }
         }
