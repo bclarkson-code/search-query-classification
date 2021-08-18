@@ -127,7 +127,6 @@ class EmbedderData(pl.LightningDataModule):
             padding='max_length'
         )
 
-        self.data = {}
         self.classes = classes
         if not encoding:
             self.encoding = {cls: i for i, cls in enumerate(self.classes)}
@@ -192,7 +191,7 @@ class EmbedderData(pl.LightningDataModule):
         )
 
     def calculate_weights(self):
-        class_freq = dict(self.data['class'].value_counts())
+        class_freq = dict(self.train['class'].value_counts())
         class_freq = {self.encoding[key]: val for key, val in class_freq.items()}
         counts = [(key, val) for key, val in class_freq.items()]
         counts = sorted(counts)
