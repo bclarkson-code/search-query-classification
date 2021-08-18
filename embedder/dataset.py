@@ -150,19 +150,19 @@ class EmbedderData(pl.LightningDataModule):
         print(f'Valid data: {len(self.valid)} lines')
 
         self.train = TextDataset(
-            train,
+            self.train,
             self.tokeniser,
             self.encoding
         )
 
         self.test = TextDataset(
-            test,
+            self.test,
             self.tokeniser,
             self.encoding
         )
 
         self.valid = TextDataset(
-            valid,
+            self.valid,
             self.tokeniser,
             self.encoding
         )
