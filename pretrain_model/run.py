@@ -17,7 +17,7 @@ if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('pretrain-logs/')
     N_DEVICES = 8
     lr = 4e-4
-    batch_size = 1024
+    batch_size = 256
     print(f'lr: {lr}')
     print(f'batch_size: {batch_size}')
     queries = SearchQueryPreTrainingDataModule(
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         mode='min',
     )
     trainer = pl.Trainer(
-        tpu_cores=32,
+        tpu_cores=8,
         max_epochs=3,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
