@@ -121,7 +121,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             tokenizer=self.tokeniser,
             mlm=True,
             mlm_probability=self.mlm_probability,
-            pad_to_multiple_of=24
+            # pad_to_multiple_of=24
         )
 
     def train_dataloader(self):
