@@ -108,10 +108,6 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         if not os.path.exists(f'datasets/test'):
             self.test = self.prepare_dataset('test')
 
-        print(f'Train: {self.train}')
-        print(f'Valid: {self.valid}')
-        print(f'Test: {self.test}')
-
     def setup(self, stage=None):
         self.tokeniser = RobertaTokenizerFast.from_pretrained(
             self.tokeniser_path,
@@ -127,8 +123,7 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
         )
 
     def train_dataloader(self):
-        print(f'self.train: {self.train}')
-        dl = DataLoader(
+        return DataLoader(
             self.train,
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
@@ -136,13 +131,9 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers
         )
-        print(f'Train DataLoader: {dl}')
-        print(f'Train DataSet: {dl.dataset}')
-        return dl
 
     def val_dataloader(self):
-        print(f'self.valid: {self.valid}')
-        dl = DataLoader(
+        return DataLoader(
             self.train,
             batch_size=self.batch_size,
             collate_fn=self.data_collator,
@@ -150,12 +141,8 @@ class SearchQueryPreTrainingDataModule(pl.LightningDataModule):
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers
         )
-        print(f'Valid DataLoader: {dl}')
-        print(f'Valid DataSet: {dl.dataset}')
-        return dl
 
     def test_dataloader(self):
-        print(len(self.test))
         return DataLoader(
             self.test,
             batch_size=self.batch_size,

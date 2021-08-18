@@ -106,7 +106,6 @@ class RobertaForPretraining(pl.LightningModule):
                                                                               num_training_steps
                                                                               - num_warmup_steps))
                 )
-            print(lr)
             return lr
         return torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda, last_epoch)
 
