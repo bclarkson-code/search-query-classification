@@ -44,4 +44,4 @@ if __name__ == '__main__':
         limit_val_batches=0.1,
         precision=16,
     )
-    trainer.fit(model, queries)
+    trainer.fit(classifier, queries)
