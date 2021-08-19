@@ -25,7 +25,7 @@ if __name__ == '__main__':
         lr=1e-4,
         weights=weights,
         num_labels=7,
-        use_pretrained=False
+        use_pretrained=True
     )
     trainer = pl.Trainer(
         tpu_cores=8,
