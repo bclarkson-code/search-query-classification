@@ -91,7 +91,7 @@ class TextDataset(Dataset):
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
         else:
-            self.datset = datasets.load_from_disk(ds_path)
+            self.dataset = datasets.load_from_disk(ds_path)
 
     def __getitem__(self, idx):
         return self.dataset.__getitem__(idx)
