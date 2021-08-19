@@ -161,6 +161,7 @@ class EmbedderData(pl.LightningDataModule):
     def clean_data(self, df):
         df = df[df['class'].isin(self.classes)]
         df['class'] = df['class'].replace(self.encoding)
+        return df
 
 
     def setup(self, stage=None):
