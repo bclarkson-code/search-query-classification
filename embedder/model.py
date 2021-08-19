@@ -12,10 +12,10 @@ class Classifier(pl.LightningModule):
             '/loss=0.00.ckpt',
             lr: float = 1e-4,
             weights: list = None,
-            num_labels=15):
+            num_labels=7):
         super().__init__()
         transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
-        self.encoder = transformer.model.roberta.encoder
+        self.embedder = transformer.model.roberta
         self.classifier = nn.Linear(768, num_labels)
 
         if weights:
@@ -28,7 +28,7 @@ class Classifier(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        embedding = self.encoder(
+        embedding = self.embedder(
             input_ids=input_ids,
             attention_mask=attention_mask
         )
