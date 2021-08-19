@@ -86,15 +86,7 @@ class TextDataset(Dataset):
                 ),
                 batched=True,
                 batch_size=100000,
-                num_proc=8,
-            )
-            print()
-            print()
-            print()
-            print('Encoding')
-            self.dataset = self.dataset.map(
-                self._encode,
-                num_proc=8
+                num_proc=12,
             )
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
@@ -167,7 +159,8 @@ class EmbedderData(pl.LightningDataModule):
             print('Done')
 
     def clean_data(self, df):
-        return df[df['class'].isin(self.classes)]
+        df = df[df['class'].isin(self.classes)]
+        df['class'] = df['class'].replace(self.encoding)
 
 
     def setup(self, stage=None):
