@@ -37,8 +37,8 @@ class Classifier(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
         input_ids, attention_mask = inputs
-        input_ids = torch.stack(input_ids)
-        attention_mask = torch.stack(attention_mask)
+        input_ids = torch.stack(input_ids).T
+        attention_mask = torch.stack(attention_mask).T
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
@@ -64,8 +64,8 @@ class Classifier(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         inputs, targets = batch
         input_ids, attention_mask = inputs
-        input_ids = torch.stack(input_ids)
-        attention_mask = torch.stack(attention_mask)
+        input_ids = torch.stack(input_ids).T
+        attention_mask = torch.stack(attention_mask).T
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
