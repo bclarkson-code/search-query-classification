@@ -38,7 +38,7 @@ class Classifier(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
 
-        preds = self(inputs)
+        preds = self(**inputs)
         loss = self.loss(preds, targets)
         self.log(
             'train-loss',
@@ -62,8 +62,7 @@ class Classifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         inputs, targets = batch
-        input_ids, attention_mask = inputs
-        preds = self(input_ids, attention_mask)
+        preds = self(**inputs)
         loss = self.loss(preds, targets)
         self.log(
             'valid-loss',
