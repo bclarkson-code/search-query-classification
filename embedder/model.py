@@ -31,7 +31,7 @@ class Classifier(pl.LightningModule):
         embedding = self.embedder(
             input_ids=input_ids,
             attention_mask=attention_mask
-        )[0]
+        )[0][:, -1, :]
         return self.classifier(embedding)
 
     def training_step(self, batch, batch_idx):
