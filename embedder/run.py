@@ -43,9 +43,4 @@ if __name__ == '__main__':
         limit_val_batches=0.1,
         precision=16,
     )
-    lr_finder = trainer.tuner.lr_find(classifier, queries)
-    new_lr = lr_finder.suggestion()
-    print(f'Optimal lr: {new_lr}')
-    with open('lr_finder_results.pkl', 'wb') as f:
-        pickle.dump(lr_finder.results, f)
-    # trainer.fit(model, queries)
+    trainer.fit(model, queries)

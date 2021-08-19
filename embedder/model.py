@@ -65,7 +65,8 @@ class Classifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         inputs, targets = batch
-        preds = self(**inputs)
+        input_ids, attention_mask = inputs
+        preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
             'valid-loss',
@@ -86,4 +87,16 @@ class Classifier(pl.LightningModule):
         )
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        optimiser = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+            optimizer=optimiser,
+            max_lr=1e-4,
+            total_steps=70455,
+        )
+        return {
+            'optimizer': optimiser,
+            'lr_scheduler': {
+                'scheduler': scheduler,
+                'interval': 'step'
+            }
+        }
