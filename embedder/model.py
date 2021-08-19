@@ -16,7 +16,7 @@ class Classifier(pl.LightningModule):
         super().__init__()
         transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
         self.encoder = transformer.model.roberta.encoder
-        self.classifier = torch.Linear(768, num_labels)
+        self.classifier = nn.Linear(768, num_labels)
 
         if weights:
             weights = torch.tensor(weights)
