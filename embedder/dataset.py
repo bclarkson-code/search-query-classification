@@ -167,33 +167,33 @@ class EmbedderData(pl.LightningDataModule):
     def setup(self, stage=None):
         if 'train' not in self.__dict__:
             print('Reading Dataframes')
-            self.train = pd.read_pickle('dataframes/train.pkl')
-            self.valid = pd.read_pickle('dataframes/valid.pkl')
-            self.test = pd.read_pickle('dataframes/test.pkl')
+            self.train_df = pd.read_pickle('dataframes/train.pkl')
+            self.valid_df = pd.read_pickle('dataframes/valid.pkl')
+            self.test_df = pd.read_pickle('dataframes/test.pkl')
             print('Filtering data')
-            self.train = self.clean_data(self.train)
-            self.valid = self.clean_data(self.valid)
-            self.test = self.clean_data(self.test)
-        print(f'Train data: {len(self.train)} lines')
-        print(f'Test data: {len(self.test)} lines')
-        print(f'Valid data: {len(self.valid)} lines')
+            self.train_df = self.clean_data(self.train_df)
+            self.valid_df = self.clean_data(self.valid_df)
+            self.test_df = self.clean_data(self.test_df)
+        print(f'Train data: {len(self.train_df)} lines')
+        print(f'Test data: {len(self.test_df)} lines')
+        print(f'Valid data: {len(self.valid_df)} lines')
 
         self.train = TextDataset(
-            self.train,
+            self.train_df,
             self.tokeniser,
             label_encoding=self.encoding,
             ds_name='train',
         )
 
         self.test = TextDataset(
-            self.test,
+            self.test_df,
             self.tokeniser,
             label_encoding=self.encoding,
             ds_name='test',
         )
 
         self.valid = TextDataset(
-            self.valid,
+            self.valid_df,
             self.tokeniser,
             label_encoding=self.encoding,
             ds_name='valid',
@@ -225,7 +225,7 @@ class EmbedderData(pl.LightningDataModule):
         )
 
     def calculate_weights(self):
-        class_freq = dict(self.train['class'].value_counts())
+        class_freq = dict(self.train_df['class'].value_counts())
         class_freq = {self.encoding[key]: val for key, val in class_freq.items()}
         counts = [(key, val) for key, val in class_freq.items()]
         counts = sorted(counts)
