@@ -1,4 +1,5 @@
 from transformers import RobertaForSequenceClassification
+from pretrain_model import RobertaForPretraining
 import torch
 from torch import nn
 import pytorch_lightning as pl
@@ -17,7 +18,7 @@ class Classifier(pl.LightningModule):
     ):
         super().__init__()
         if use_pretrained:
-            transformer = RobertaForSequenceClassification(n_labels=num_labels, )
+            transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
             self.embedder = transformer.model.roberta
             self.classifier = nn.Linear(768, num_labels)
         else:
