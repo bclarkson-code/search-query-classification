@@ -91,7 +91,7 @@ class Classifier(pl.LightningModule):
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimiser,
             max_lr=1e-2,
-            total_steps=70455,
+            total_steps=46930,
         )
         return {
             'optimizer': optimiser,

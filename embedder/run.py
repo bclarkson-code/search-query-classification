@@ -26,20 +26,11 @@ if __name__ == '__main__':
         weights=weights,
         num_labels=7
     )
-    checkpoint_callback = ModelCheckpoint(
-        monitor='valid-loss',
-        dirpath='embedder-checkpoints/',
-        filename='model-{epoch:02d}-{valid-loss:.2f}',
-        save_top_k=1,
-        mode='min',
-    )
     trainer = pl.Trainer(
         tpu_cores=8,
-        max_epochs=3,
+        max_epochs=2,
         progress_bar_refresh_rate=1,
         logger=tb_logger,
-        auto_lr_find=True,
-        callbacks=checkpoint_callback,
         val_check_interval=2500,
         limit_val_batches=0.1,
         precision=16,
