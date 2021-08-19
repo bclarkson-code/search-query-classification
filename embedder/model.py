@@ -90,7 +90,7 @@ class Classifier(pl.LightningModule):
         )
 
     def configure_optimizers(self):
-        optimiser = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        optimiser = torch.optim.SGD(self.parameters(), lr=self.learning_rate)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimiser,
             max_lr=1e-4,
