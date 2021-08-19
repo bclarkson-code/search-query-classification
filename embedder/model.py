@@ -8,7 +8,8 @@ class Classifier(pl.LightningModule):
     def __init__(
             self,
             checkpoint_path: str =
-            '~search-query-classification/pretrain_model/pretrain-checkpoints/model-epoch=01-val/loss=0.00.ckpt',
+            '~/search-query-classification/pretrain_model/pretrain-checkpoints/model-epoch=01-val'
+            '/loss=0.00.ckpt',
             lr: float = 1e-4,
             weights: list = None,
             num_labels=15):
