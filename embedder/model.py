@@ -34,7 +34,7 @@ class Classifier(pl.LightningModule):
                 attention_mask=attention_mask
             )
         except Exception as e:
-            print(input_ids, attention_mask)
+            # print(input_ids, attention_mask)
             raise e
         return self.classifier(embedding)
 
