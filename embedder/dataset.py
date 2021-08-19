@@ -96,7 +96,8 @@ class TextDataset(Dataset):
     def __getitem__(self, idx):
         row = self.dataset.__getitem__(idx)
         tokens = [row['input_ids'], row['attention_mask']]
-        cls = row['class']
+        cls = np.zeros(7, dtype=np.float32)
+        cls[row['class']] = 0.0
         return tokens, cls
 
 
