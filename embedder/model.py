@@ -17,7 +17,8 @@ class Classifier(pl.LightningModule):
             use_pretrained=True
     ):
         super().__init__()
-        if use_pretrained:
+        self.use_pretrained = use_pretrained
+        if self.use_pretrained:
             transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
             self.embedder = transformer.model.roberta
             self.classifier = nn.Linear(768, num_labels)
@@ -43,7 +44,7 @@ class Classifier(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        if use_pretrained:
+        if self.use_pretrained:
             embedding = self.embedder(
                 input_ids=input_ids,
                 attention_mask=attention_mask
