@@ -27,7 +27,7 @@ class Classifier(pl.LightningModule):
         self.train_acc = torchmetrics.Accuracy()
         self.valid_acc = torchmetrics.Accuracy()
 
-    def forward(self, input_ids=input_ids, attention_mask=attention_mask):
+    def forward(self, input_ids, attention_mask):
         print(input_ids, attention_mask)
         embedding = self.embedder(
             input_ids=input_ids,
