@@ -94,11 +94,12 @@ class TextDataset(Dataset):
             self.dataset = datasets.load_from_disk(ds_path)
 
     def __getitem__(self, idx):
-        return self.dataset.__getitem__(idx)
+        row = self.dataset.__getitem__(idx)
+        return (row['input_ids'], row['attention_mask']), row['class']
 
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.dataset)
 
     def _encode(self, row):
         row['class'] = self.label_encoding[row['class']]
