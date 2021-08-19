@@ -69,6 +69,9 @@ class Classifier(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         inputs, targets = batch
         input_ids, attention_mask = inputs
+        input_ids = torch.stack(input_ids)
+        attention_mask = torch.stack(attention_mask)
+        print(input_ids.shape)
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
