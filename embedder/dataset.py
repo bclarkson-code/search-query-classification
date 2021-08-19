@@ -88,8 +88,13 @@ class TextDataset(Dataset):
                 batch_size=100000,
                 num_proc=8,
             )
+            print()
+            print()
+            print()
+            print('Encoding')
             self.dataset = self.dataset.map(
                 self._encode,
+                num_proc=8
             )
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
