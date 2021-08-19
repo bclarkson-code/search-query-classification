@@ -1,4 +1,4 @@
-from transformers import RobertaForSequenceClassification
+from transformers import RobertaForSequenceClassification, RobertaConfig
 from pretrain_model import RobertaForPretraining
 import torch
 from torch import nn
