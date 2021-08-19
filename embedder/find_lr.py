@@ -9,6 +9,7 @@ from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning.callbacks import ModelCheckpoint
 from model import Classifier
 from dataset import EmbedderData
+import pickle
 
 if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('embedder-logs/')
