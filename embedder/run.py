@@ -15,7 +15,7 @@ if __name__ == '__main__':
     tb_logger = pl_loggers.TensorBoardLogger('embedder-logs/')
     N_DEVICES = 8
     queries = EmbedderData(
-        batch_size=128,
+        batch_size=256,
         num_workers=os.cpu_count(),
     )
     queries.prepare_data()
