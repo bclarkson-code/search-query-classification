@@ -85,11 +85,12 @@ class TextDataset(Dataset):
                     max_length=24
                 ),
                 batched=True,
-                batch_size=1000000,
-                num_proc=4,
+                batch_size=100000,
+                num_proc=8,
             )
             self.dataset = self.dataset.map(
-                self._encode
+                self._encode,
+                num_proc=os.cpu_count()
             )
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
@@ -161,11 +162,20 @@ class EmbedderData(pl.LightningDataModule):
             self.downloader.download_datasets()
             print('Done')
 
+    def clean_data(self, df):
+        return df[df['class'].isin(self.classes)]
+
+
     def setup(self, stage=None):
         if 'train' not in self.__dict__:
+            print('Reading Dataframes')
             self.train = pd.read_pickle('dataframes/train.pkl')
             self.valid = pd.read_pickle('dataframes/valid.pkl')
             self.test = pd.read_pickle('dataframes/test.pkl')
+            print('Filtering data')
+            self.train = self.prepare_data(self.train)
+            self.valid = self.prepare_data(self.valid)
+            self.test = self.prepare_data(self.test)
         print(f'Train data: {len(self.train)} lines')
         print(f'Test data: {len(self.test)} lines')
         print(f'Valid data: {len(self.valid)} lines')
