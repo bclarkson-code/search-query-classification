@@ -95,10 +95,9 @@ class TextDataset(Dataset):
 
     def __getitem__(self, idx):
         row = self.dataset.__getitem__(idx)
-        return {
-            'input_ids': row['input_ids'],
-            'attention_mask': row['attention_mask']
-        }, row['class']
+        tokens = [row['input_ids'], row['attention_mask']]
+        cls = row['class']
+        return tokens, cls
 
 
     def __len__(self):

@@ -28,17 +28,20 @@ class Classifier(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        print(input_ids, attention_mask)
-        embedding = self.embedder(
-            input_ids=input_ids,
-            attention_mask=attention_mask
-        )
+        try:
+            embedding = self.embedder(
+                input_ids=input_ids,
+                attention_mask=attention_mask
+            )
+        except Exception as e:
+            print(input_ids, attention_mask)
+            raise e
         return self.classifier(embedding)
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
-
-        preds = self(**inputs)
+        input_ids, attention_mask = inputs
+        preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
             'train-loss',
