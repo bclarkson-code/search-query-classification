@@ -90,7 +90,6 @@ class TextDataset(Dataset):
             )
             self.dataset = self.dataset.map(
                 self._encode,
-                num_proc=os.cpu_count()
             )
             self.dataset.set_format(type='torch', columns=['input_ids', 'attention_mask', 'class'])
             self.dataset.save_to_disk(ds_path)
