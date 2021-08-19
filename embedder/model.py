@@ -1,4 +1,4 @@
-from pretrain_model import RobertaForPretraining
+from transformers import RobertaForSequenceClassification
 import torch
 from torch import nn
 import pytorch_lightning as pl
@@ -12,11 +12,25 @@ class Classifier(pl.LightningModule):
             '/loss=0.00.ckpt',
             lr: float = 1e-4,
             weights: list = None,
-            num_labels=7):
+            num_labels=7,
+            use_pretrained=True
+    ):
         super().__init__()
-        transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
-        self.embedder = transformer.model.roberta
-        self.classifier = nn.Linear(768, num_labels)
+        if use_pretrained:
+            transformer = RobertaForSequenceClassification(n_labels=num_labels, )
+            self.embedder = transformer.model.roberta
+            self.classifier = nn.Linear(768, num_labels)
+        else:
+            model_config = RobertaConfig(
+                vocab_size=49739,
+                max_position_embeddings=514,
+                num_attention_heads=12,
+                num_hidden_layers=6,
+                type_vocab_size=1,
+                num_labels=7
+            )
+
+            self.transformer = RobertaForSequenceClassification(model_config)
 
         if weights:
             weights = torch.tensor(weights)
@@ -28,11 +42,15 @@ class Classifier(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        embedding = self.embedder(
-            input_ids=input_ids,
-            attention_mask=attention_mask
-        )[0][:, -1, :]
-        return self.classifier(embedding)
+        if use_pretrained:
+            embedding = self.embedder(
+                input_ids=input_ids,
+                attention_mask=attention_mask
+            )[0][:, -1, :]
+            return self.classifier(embedding)
+        else:
+            return self.transformer(input_ids=input_ids,
+                                    attention_mask=attention_mask).logits
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
