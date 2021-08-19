@@ -226,7 +226,6 @@ class EmbedderData(pl.LightningDataModule):
 
     def calculate_weights(self):
         class_freq = dict(self.train_df['class'].value_counts())
-        class_freq = {self.encoding[key]: val for key, val in class_freq.items()}
         counts = [(key, val) for key, val in class_freq.items()]
         counts = sorted(counts)
         counts = [c[1] for c in counts]
