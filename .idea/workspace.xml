@@ -7,7 +7,6 @@
     <list default="true" id="221a3444-cb9c-441b-84fb-28be073d74a5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/embedder/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/embedder/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/embedder/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/embedder/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +127,7 @@
       <workItem from="1627242806894" duration="36495000" />
       <workItem from="1627811838757" duration="51611000" />
       <workItem from="1628934014737" duration="6000" />
-      <workItem from="1628934055209" duration="77123000" />
+      <workItem from="1628934055209" duration="77437000" />
     </task>
     <servers />
   </component>
@@ -146,17 +145,6 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/gpt2_model/gpt2_model.py</url>
-          <line>200</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
