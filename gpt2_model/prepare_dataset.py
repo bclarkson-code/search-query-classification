@@ -3,48 +3,61 @@ from datasets import Dataset
 from transformers import GPT2Tokenizer
 import pandas as pd
 
+
 def get_encoding(keys, encoding):
     if type(keys) == str:
         keys = [keys]
     return [encoding[key] for key in keys]
 
+
 def encode_ds(ds, encoding):
     return ds.map(
-        lambda x:
-        dict(
-            input_ids=x['input_ids'], 
-            attention_mask=x['attention_mask'],
-            category=get_encoding(x['category'], encoding=encoding)
+        lambda x: dict(
+            input_ids=x["input_ids"],
+            attention_mask=x["attention_mask"],
+            category=get_encoding(x["category"], encoding=encoding),
         ),
-        batched=True
+        batched=True,
     )
 
-if __name__ == '__main__':
-    data_path = '/home/jupyter/final_model/search-query-classification/gpt2_model/raw_datasets/'
-    categories = ['Computers', 'Regional', 'Home', 'World', 'Reference', 'Society',
-           'Health', 'News', 'Business', 'Arts', 'Science', 'Recreation',
-           'Shopping', 'Sports', 'Games']
-    encoding = {cat: i for i, cat in enumerate(categories)} 
+
+if __name__ == "__main__":
+    data_path = "/home/jupyter/final_model"
+    categories = [
+        "Computers",
+        "Regional",
+        "Home",
+        "World",
+        "Reference",
+        "Society",
+        "Health",
+        "News",
+        "Business",
+        "Arts",
+        "Science",
+        "Recreation",
+        "Shopping",
+        "Sports",
+        "Games",
+    ]
+    encoding = {cat: i for i, cat in enumerate(categories)}
     tokeniser = GPT2Tokenizer.from_pretrained(
-            'gpt2',
-            max_len=24,
-            truncation=True,
-            padding='max_length'
-            )
+        "gpt2", max_len=24, truncation=True, padding="max_length"
+    )
     tokeniser.pad_token = tokeniser.eos_token
-    
-    for dataset_path in ['train', 'test', 'valid']:
+
+    for dataset_path in ["train", "test", "valid"]:
         # Load dataset
-        ds_file = os.path.join(data_path, f'final_raw_{dataset_path}.pkl')
+        ds_file = os.path.join(data_path, f"{dataset_path}.pkl")
         df = pd.read_pickle(ds_file)
         # Clean dataset
-        df = df[~pd.isna(df['category'])]
-        df = df[~pd.isna(df['query'])]
-        df = df[['query', 'category']]
-        
+        df = df[~pd.isna(df["category"])]
+        df = df[~pd.isna(df["query"])]
+        df = df[["query", "category"]]
+
         # Convert from pandas into huggingface dataset
         dataset = Dataset.from_pandas(df)
-        
+
         # Tokenise queries
         dataset = dataset.map(
             lambda ex: tokeniser(
@@ -52,10 +65,11 @@ if __name__ == '__main__':
                 add_special_tokens=True,
                 truncation=True,
                 max_length=24,
-                padding='max_length'
+                padding="max_length",
             ),
-            batched=True)
-        
+            batched=True,
+        )
+
         # Numerically encode categories
         dataset = encode_ds(dataset, encoding)
-        dataset.save_to_disk(f'datasets/{dataset_path}')
+        dataset.save_to_disk(f"datasets/{dataset_path}")
