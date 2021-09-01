@@ -47,17 +47,21 @@ if __name__ == "__main__":
 
     for dataset_path in ["train", "test", "valid"]:
         # Load dataset
+        print("Reading pickle")
         ds_file = f"datasets/{dataset_path}.pkl"
         df = pd.read_pickle(ds_file)
         # Clean dataset
+        print("Cleaning")
         df = df[~pd.isna(df["category"])]
         df = df[~pd.isna(df["query"])]
         df = df[["query", "category"]]
 
         # Convert from pandas into huggingface dataset
+        print("Converting to huggingface dataset")
         dataset = Dataset.from_pandas(df)
 
         # Tokenise queries
+        print("Tokenising")
         dataset = dataset.map(
             lambda ex: tokeniser(
                 ex["query"],
@@ -70,5 +74,7 @@ if __name__ == "__main__":
         )
 
         # Numerically encode categories
+        print("Numerically Encoding categories")
         dataset = encode_ds(dataset, encoding)
+        print("Saving dataset")
         dataset.save_to_disk(f"datasets/{dataset_path}")
