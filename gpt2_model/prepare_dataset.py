@@ -22,7 +22,6 @@ def encode_ds(ds, encoding):
 
 
 if __name__ == "__main__":
-    data_path = "/home/jupyter/final_model"
     categories = [
         "Computers",
         "Regional",
@@ -48,7 +47,7 @@ if __name__ == "__main__":
 
     for dataset_path in ["train", "test", "valid"]:
         # Load dataset
-        ds_file = os.path.join(data_path, f"{dataset_path}.pkl")
+        ds_file = f"{dataset_path}.pkl"
         df = pd.read_pickle(ds_file)
         # Clean dataset
         df = df[~pd.isna(df["category"])]
