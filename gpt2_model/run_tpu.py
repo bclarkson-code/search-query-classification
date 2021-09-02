@@ -13,7 +13,7 @@ from dataset import SearchQueryDataModule
 if __name__ == "__main__":
     N_DEVICES = 8
     queries = SearchQueryDataModule(batch_size=128)
-    model = GPT2Classifier("gpt2", lr=1e-1, num_labels=15)
+    model = GPT2Classifier("gpt2", lr=3e-2, num_labels=15)
 
     trainer = pl.Trainer(
         tpu_cores=N_DEVICES,
