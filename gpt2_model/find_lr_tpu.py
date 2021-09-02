@@ -17,9 +17,13 @@ if __name__ == "__main__":
     model = GPT2Classifier("gpt2", lr=1e-1, num_labels=15)
 
     trainer = pl.Trainer(
+        tpu_cores=N_DEVICES,
+        # gpus=2,
         max_epochs=1,
         progress_bar_refresh_rate=1,
         val_check_interval=2000,
+        # precision=16,
+        # accelerator="ddp",
     )
 
     lr_finder = trainer.tuner.lr_find(model, queries)
