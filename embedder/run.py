@@ -16,12 +16,12 @@ from pathlib import Path
 if __name__ == "__main__":
     with torch.no_grad():
         queries = EmbedderData(
-            "/home/benedict/search-query-classification/gpt2_model/datasets",
+            "/home/benedictclarkson1/search-query-classification/gpt2_model/datasets",
             batch_size=4096,
             num_workers=os.cpu_count(),
         )
         embedder = Embedder(
-            "/home/benedict/search-query-classification/gpt2_model/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
+            "/home/benedictclarkson1/search-query-classification/gpt2_model/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
         )
         embedder.eval()
 
