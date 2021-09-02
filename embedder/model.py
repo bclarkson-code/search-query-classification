@@ -34,55 +34,6 @@ class Embedder(pl.LightningModule):
             input_ids=input_ids, attention_mask=attention_mask
         )[0][:, -1, :]
 
-    def training_step(self, batch, batch_idx):
-        inputs, targets = batch
-        input_ids, attention_mask = inputs
-        input_ids = torch.stack(input_ids).T
-        attention_mask = torch.stack(attention_mask).T
-        preds = self(input_ids, attention_mask)
-        loss = self.loss(preds, targets)
-        self.log(
-            "train-loss", loss, on_step=False, on_epoch=True, sync_dist=True
-        )
-        self.train_acc(preds, targets)
-
-        return loss
-
-    def training_epoch_end(self, outputs):
-        self.log(
-            "train-accuracy",
-            self.train_acc.compute(),
-            on_step=False,
-            on_epoch=True,
-            sync_dist=True,
-        )
-
-    def validation_step(self, batch, batch_idx):
-        inputs, targets = batch
-        input_ids, attention_mask = inputs
-        input_ids = torch.stack(input_ids).T
-        attention_mask = torch.stack(attention_mask).T
-        preds = self(input_ids, attention_mask)
-        loss = self.loss(preds, targets)
-        self.log(
-            "valid-loss", loss, on_step=False, on_epoch=True, sync_dist=True
-        )
-        self.valid_acc(preds, targets)
-
-    def validation_epoch_end(self, outputs):
-        self.log(
-            "valid-accuracy",
-            self.valid_acc.compute(),
-            on_step=False,
-            on_epoch=True,
-            sync_dist=True,
-        )
-
-    def configure_optimizers(self):
-        optimiser = torch.optim.SGD(self.parameters(), lr=self.learning_rate)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
-            optimizer=optimiser,
-            max_lr=1e-2,
-            total_steps=46930,
-        )
-        return [optimiser], [scheduler]
+    def predict_step(self, batch, batch_idx):
+        input_ids, attention_mask = batch
+        return self(input_ids, attention_mask)
