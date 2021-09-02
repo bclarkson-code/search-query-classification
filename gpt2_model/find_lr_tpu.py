@@ -13,7 +13,7 @@ from model import GPT2Classifier
 from dataset import SearchQueryDataModule
 
 if __name__ == "__main__":
-    N_DEVICES = 8
+    N_DEVICES = 1
     queries = SearchQueryDataModule(batch_size=128)
     model = GPT2Classifier("gpt2", lr=1e-1, num_labels=15)
 

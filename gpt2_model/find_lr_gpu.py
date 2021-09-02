@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     trainer = pl.Trainer(
         # tpu_cores=N_DEVICES,
-        gpus=2,
+        gpus=1,
         max_epochs=1,
         progress_bar_refresh_rate=1,
         val_check_interval=2000,
