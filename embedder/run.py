@@ -4,16 +4,19 @@ import os
 os.environ["XLA_USE_BF16"] = "1"
 os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-
+import pickle
+import torch
+import torch_xla.core.xla_model as xm
 import pytorch_lightning as pl
 from dataset import EmbedderData
 from model import Embedder
-import pickle
+import numpy as np
+from tqdm.auto import tqdm
 
 if __name__ == "__main__":
     queries = EmbedderData(
         "/home/benedictclarkson1/search-query-classification/gpt2_model",
-        batch_size=2048,
+        batch_size=4096,
         num_workers=os.cpu_count(),
     )
     embedder = Embedder(
@@ -23,14 +26,23 @@ if __name__ == "__main__":
         tpu_cores=8,
         precision=16,
     )
-    val_preds = trainer.predict(embedder, queries.val_dataloader())
-    val_preds = val_preds.detach().numpy()
-    np.save(val_preds, "valid_preds")
-
-    train_preds = trainer.predict(embedder, queries.train_dataloader())
-    train_preds = train_preds.detach().numpy()
-    np.save(train_preds, "train_preds")
-
-    test_preds = trainer.predict(embedder, queries.test_dataloader())
-    test_preds = test_preds.detach().numpy()
-    np.save(test_preds, "test_preds")
+    device = xm.xla_device()
+    with torch.no_grad():
+        embedder.to(device)
+        embedder.eval()
+        for loader, ds_name in zip(
+            [
+                queries.val_dataloader(),
+                queries.train_dataloader(),
+                queries.test_dataloader(),
+            ],
+            ["valid", "train", "test"],
+        ):
+            for i, batch in tqdm(
+                loader, desc=f"Embedding {ds_name}", total=len(loader)
+            ):
+                batch.to(device)
+                preds = embedder.predict_step(batch)
+                preds = preds.cpu().numpy()
+                with open(f"preds/valid_preds_{i}.npy", "wb") as f:
+                    np.save(f, preds)
