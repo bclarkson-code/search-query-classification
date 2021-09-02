@@ -4,7 +4,7 @@ import torch
 from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import GPT2ForSequenceClassification
 
 
 class GPT2Classifier(pl.LightningModule):
