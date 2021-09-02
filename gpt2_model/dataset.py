@@ -85,23 +85,24 @@ class SearchQueryDataModule(pl.LightningDataModule):
             persistent_workers=self.persistent_workers,
         )
 
-    def val_dataloader(self):
-        return DataLoader(
-            self.train,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.num_workers,
-            persistent_workers=self.persistent_workers,
-        )
-
-    def test_dataloader(self):
-        return DataLoader(
-            self.test,
-            batch_size=self.batch_size,
-            shuffle=False,
-            num_workers=self.num_workers,
-            persistent_workers=self.persistent_workers,
-        )
+    #
+    # def val_dataloader(self):
+    #     return DataLoader(
+    #         self.train,
+    #         batch_size=self.batch_size,
+    #         shuffle=False,
+    #         num_workers=self.num_workers,
+    #         persistent_workers=self.persistent_workers,
+    #     )
+    #
+    # def test_dataloader(self):
+    #     return DataLoader(
+    #         self.test,
+    #         batch_size=self.batch_size,
+    #         shuffle=False,
+    #         num_workers=self.num_workers,
+    #         persistent_workers=self.persistent_workers,
+    #     )
 
 
 if __name__ == "__main__":
