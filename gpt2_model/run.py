@@ -22,6 +22,7 @@ if __name__ == "__main__":
         max_epochs=1,
         progress_bar_refresh_rate=1,
         val_check_interval=10000,
+        limit_val_batches=0.05
         # precision=16,
         # accelerator="ddp",
     )

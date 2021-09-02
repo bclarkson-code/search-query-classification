@@ -18,10 +18,12 @@ if __name__ == "__main__":
 
     trainer = pl.Trainer(
         tpu_cores=N_DEVICES,
-        max_epochs=1,
+        max_epochs=3,
         progress_bar_refresh_rate=1,
         val_check_interval=2000,
         precision=16,
+        limit_train_batches=0.1,
+        limit_val_batches=0.05,
     )
 
     trainer.fit(model, queries)
