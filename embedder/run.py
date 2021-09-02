@@ -12,7 +12,7 @@ import pickle
 
 if __name__ == "__main__":
     queries = EmbedderData(
-        batch_size=1024,
+        batch_size=2048,
         num_workers=os.cpu_count(),
     )
     embedder = Embedder()
