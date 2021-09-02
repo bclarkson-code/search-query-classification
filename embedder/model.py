@@ -31,15 +31,10 @@ class Embedder(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        if self.use_pretrained:
-            embedding = self.embedder(
-                input_ids=input_ids, attention_mask=attention_mask
-            )[0][:, -1, :]
-            return self.classifier(embedding)
-        else:
-            return self.transformer(
-                input_ids=input_ids, attention_mask=attention_mask
-            ).logits
+        embedding = self.embedder(
+            input_ids=input_ids, attention_mask=attention_mask
+        )[0][:, -1, :]
+        return self.classifier(embedding)
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
