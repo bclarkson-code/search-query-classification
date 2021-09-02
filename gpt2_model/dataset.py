@@ -80,7 +80,6 @@ class SearchQueryDataModule(pl.LightningDataModule):
         return DataLoader(
             self.train,
             batch_size=self.batch_size,
-            collate_fn=self.data_collator,
             shuffle=True,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers,
@@ -90,7 +89,6 @@ class SearchQueryDataModule(pl.LightningDataModule):
         return DataLoader(
             self.train,
             batch_size=self.batch_size,
-            collate_fn=self.data_collator,
             shuffle=False,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers,
@@ -100,7 +98,6 @@ class SearchQueryDataModule(pl.LightningDataModule):
         return DataLoader(
             self.test,
             batch_size=self.batch_size,
-            collate_fn=self.data_collator,
             shuffle=False,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers,
