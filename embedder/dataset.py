@@ -4,6 +4,17 @@ import pytorch_lightning as pl
 from datasets import Dataset
 
 
+class Subset(torch.utils.data.Dataset):
+    def __init__(self, ds):
+        self.ds = ds
+
+    def __len__(self):
+        return 128
+
+    def __getitem__(self, idx):
+        return self.ds.__getitem__(idx)
+
+
 class EmbedderData(pl.LightningDataModule):
     def __init__(
         self,
@@ -77,7 +88,7 @@ class EmbedderData(pl.LightningDataModule):
 
     def debug_dataloader(self):
         return DataLoader(
-            self.train[:128],
+            Subset(self.train),
             batch_size=16,
             shuffle=False,
             num_workers=self.num_workers,
