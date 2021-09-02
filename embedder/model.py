@@ -1,38 +1,27 @@
-from transformers import RobertaForSequenceClassification, RobertaConfig
+from transformers import GPT2ForSequenceClassification
 from pretrain_model import RobertaForPretraining
 import torch
 from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
 
+
 class Classifier(pl.LightningModule):
     def __init__(
-            self,
-            checkpoint_path: str =
-            '~/search-query-classification/pretrain_model/pretrain-checkpoints/model-epoch=01-val'
-            '/loss=0.00.ckpt',
-            lr: float = 1e-4,
-            weights: list = None,
-            num_labels=7,
-            use_pretrained=True
+        self,
+        checkpoint_path: str = "~/search-query-classification/pretrain_model/pretrain-checkpoints/model-epoch=01-val"
+        "/loss=0.00.ckpt",
+        lr: float = 1e-4,
+        weights: list = None,
+        num_labels=7,
+        use_pretrained=True,
     ):
         super().__init__()
-        self.use_pretrained = use_pretrained
-        if self.use_pretrained:
-            transformer = RobertaForPretraining.load_from_checkpoint(checkpoint_path)
-            self.embedder = transformer.model.roberta
-            self.classifier = nn.Linear(768, num_labels)
-        else:
-            model_config = RobertaConfig(
-                vocab_size=49739,
-                max_position_embeddings=514,
-                num_attention_heads=12,
-                num_hidden_layers=6,
-                type_vocab_size=1,
-                num_labels=7
-            )
-
-            self.transformer = RobertaForSequenceClassification(model_config)
+        transformer = GPT2ForSequenceClassification.load_from_checkpoint(
+            checkpoint_path
+        )
+        self.embedder = transformer.model.roberta
+        self.classifier = nn.Linear(768, num_labels)
 
         if weights:
             weights = torch.tensor(weights)
@@ -46,13 +35,13 @@ class Classifier(pl.LightningModule):
     def forward(self, input_ids, attention_mask):
         if self.use_pretrained:
             embedding = self.embedder(
-                input_ids=input_ids,
-                attention_mask=attention_mask
+                input_ids=input_ids, attention_mask=attention_mask
             )[0][:, -1, :]
             return self.classifier(embedding)
         else:
-            return self.transformer(input_ids=input_ids,
-                                    attention_mask=attention_mask).logits
+            return self.transformer(
+                input_ids=input_ids, attention_mask=attention_mask
+            ).logits
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
@@ -62,11 +51,7 @@ class Classifier(pl.LightningModule):
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
-            'train-loss',
-            loss,
-            on_step=False,
-            on_epoch=True,
-            sync_dist=True
+            "train-loss", loss, on_step=False, on_epoch=True, sync_dist=True
         )
         self.train_acc(preds, targets)
 
@@ -74,11 +59,11 @@ class Classifier(pl.LightningModule):
 
     def training_epoch_end(self, outputs):
         self.log(
-            'train-accuracy',
+            "train-accuracy",
             self.train_acc.compute(),
             on_step=False,
             on_epoch=True,
-            sync_dist=True
+            sync_dist=True,
         )
 
     def validation_step(self, batch, batch_idx):
@@ -92,21 +77,17 @@ class Classifier(pl.LightningModule):
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
-            'valid-loss',
-            loss,
-            on_step=False,
-            on_epoch=True,
-            sync_dist=True
+            "valid-loss", loss, on_step=False, on_epoch=True, sync_dist=True
         )
         self.valid_acc(preds, targets)
 
     def validation_epoch_end(self, outputs):
         self.log(
-            'valid-accuracy',
+            "valid-accuracy",
             self.valid_acc.compute(),
             on_step=False,
             on_epoch=True,
-            sync_dist=True
+            sync_dist=True,
         )
 
     def configure_optimizers(self):
@@ -117,9 +98,6 @@ class Classifier(pl.LightningModule):
             total_steps=46930,
         )
         return {
-            'optimizer': optimiser,
-            'lr_scheduler': {
-                'scheduler': scheduler,
-                'interval': 'step'
-            }
+            "optimizer": optimiser,
+            "lr_scheduler": {"scheduler": scheduler, "interval": "step"},
         }
