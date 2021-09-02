@@ -17,7 +17,7 @@ if __name__ == "__main__":
     with torch.no_grad():
         queries = EmbedderData(
             "/home/benedict/Documents/thesis/datasets",
-            batch_size=1024,
+            batch_size=4096,
             num_workers=os.cpu_count(),
         )
         embedder = Embedder(
