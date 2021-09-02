@@ -24,5 +24,13 @@ if __name__ == "__main__":
         precision=16,
     )
     val_preds = trainer.predict(embedder, queries.val_dataloader())
-    val_preds = val_pred.detach().numpy()
+    val_preds = val_preds.detach().numpy()
     np.save(val_preds, "valid_preds")
+
+    train_preds = trainer.predict(embedder, queries.train_dataloader())
+    train_preds = train_preds.detach().numpy()
+    np.save(train_preds, "train_preds")
+
+    test_preds = trainer.predict(embedder, queries.test_dataloader())
+    test_preds = test_preds.detach().numpy()
+    np.save(test_preds, "test_preds")
