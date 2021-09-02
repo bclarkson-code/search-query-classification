@@ -57,7 +57,9 @@ class GPT2Classifier(pl.LightningModule):
         )
 
     def validation_step(self, batch, batch_idx):
-        input_ids, attention_mask, targets = batch
+        input_ids, attention_mask, targets = [
+            batch[col] for col in ["input_ids", "attention_mask", "targets"]
+        ]
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
