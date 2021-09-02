@@ -28,12 +28,8 @@ if __name__ == "__main__":
         trainer = pl.Trainer(tpu_cores=8, precision=16)
         os.system("rm -rf preds")
         Path("preds").mkdir(exist_ok=True)
-        debug = queries.debug_dataloader()
-        preds = trainer.predict(embedder, debug)
-        print(f"Debug succeeded: {preds is not None}")
 
         for loader in [
-            queries.val_dataloader(),
             queries.train_dataloader(),
             queries.test_dataloader(),
         ]:
