@@ -26,7 +26,6 @@ if __name__ == "__main__":
         precision=16,
     )
     with torch.no_grad():
-        embedder.to(device)
         embedder.eval()
         for loader, ds_name in zip(
             [
