@@ -1,5 +1,5 @@
 from transformers import GPT2ForSequenceClassification
-from classifier import Classifier
+from classifier import GPT2Classifier
 import torch
 from torch import nn
 import pytorch_lightning as pl
@@ -17,7 +17,7 @@ class Embedder(pl.LightningModule):
         use_pretrained=True,
     ):
         super().__init__()
-        transformer = Classifier.load_from_checkpoint(checkpoint_path)
+        transformer = GPT2Classifier.load_from_checkpoint(checkpoint_path)
         self.embedder = transformer.model.roberta
         self.classifier = nn.Linear(768, num_labels)
 
