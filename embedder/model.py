@@ -18,7 +18,7 @@ class Embedder(pl.LightningModule):
     ):
         super().__init__()
         transformer = GPT2Classifier.load_from_checkpoint(checkpoint_path)
-        self.embedder = transformer.model.roberta
+        self.embedder = transformer.transformer.transformer
         self.classifier = nn.Linear(768, num_labels)
 
         if weights:
