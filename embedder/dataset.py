@@ -77,8 +77,8 @@ class EmbedderData(pl.LightningDataModule):
 
     def debug_dataloader(self):
         return DataLoader(
-            self.train[:4096],
-            batch_size=self.batch_size,
+            self.train[:128],
+            batch_size=16,
             shuffle=False,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers,
