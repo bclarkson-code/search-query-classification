@@ -6,14 +6,11 @@ os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import pytorch_lightning as pl
-from pytorch_lightning import loggers as pl_loggers
-from pytorch_lightning.callbacks import ModelCheckpoint
 from model import Classifier
 from dataset import EmbedderData
 import pickle
 
 if __name__ == "__main__":
-    N_DEVICES = 8
     queries = EmbedderData(
         batch_size=1024,
         num_workers=os.cpu_count(),
@@ -21,11 +18,8 @@ if __name__ == "__main__":
     embedder = Embedder()
     trainer = pl.Trainer(
         tpu_cores=8,
-        max_epochs=2,
-        progress_bar_refresh_rate=1,
-        logger=tb_logger,
-        val_check_interval=2500,
-        limit_val_batches=0.1,
         precision=16,
     )
-    trainer.fit(classifier, queries)
+    val_preds = trainer.predict(embedder, data.val_dataloader())
+    val_preds = val_pred.detach().numpy()
+    np.save(val_preds)
