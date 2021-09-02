@@ -19,7 +19,6 @@ class Embedder(pl.LightningModule):
         super().__init__()
         transformer = GPT2Classifier.load_from_checkpoint(checkpoint_path)
         self.embedder = transformer.transformer.transformer
-        self.classifier = nn.Linear(768, num_labels)
 
         if weights:
             weights = torch.tensor(weights)
@@ -34,7 +33,6 @@ class Embedder(pl.LightningModule):
         embedding = self.embedder(
             input_ids=input_ids, attention_mask=attention_mask
         )[0][:, -1, :]
-        return self.classifier(embedding)
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
@@ -87,7 +85,4 @@ class Embedder(pl.LightningModule):
             max_lr=1e-2,
             total_steps=46930,
         )
-        return {
-            "optimizer": optimiser,
-            "lr_scheduler": {"scheduler": scheduler, "interval": "step"},
-        }
+        return [optimiser], [scheduler]
