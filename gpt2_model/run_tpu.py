@@ -1,6 +1,5 @@
 import logging
 import os
-from matplotlib import pyplot as plt
 
 # Variables to speed up TPU
 os.environ["XLA_USE_BF16"] = "1"
