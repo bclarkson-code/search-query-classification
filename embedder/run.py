@@ -17,7 +17,7 @@ if __name__ == "__main__":
     with torch.no_grad():
         queries = EmbedderData(
             "/home/benedictclarkson1/search-query-classification/gpt2_model/datasets",
-            batch_size=4096,
+            batch_size=2048,
             num_workers=os.cpu_count(),
         )
         embedder = Embedder(
@@ -26,11 +26,7 @@ if __name__ == "__main__":
         embedder.eval()
 
         trainer = pl.Trainer(tpu_cores=8, precision=16)
-        os.system("rm -rf preds")
-        Path("preds").mkdir(exist_ok=True)
 
-        for loader in [
-            queries.train_dataloader(),
-            queries.test_dataloader(),
-        ]:
-            trainer.predict(embedder, loader)
+        Path("preds").mkdir(exist_ok=True)
+        trainer.predict(embedder, queries.train_dataloader())
+        trainer.predict(embedder, queries.test_dataloader())           
