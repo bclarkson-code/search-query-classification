@@ -51,7 +51,7 @@ class EmbedderData(pl.LightningDataModule):
         return DataLoader(
             self.train,
             batch_size=self.batch_size,
-            shuffle=True,
+            shuffle=False,
             num_workers=self.num_workers,
             persistent_workers=self.persistent_workers,
             drop_last=True,
@@ -60,6 +60,7 @@ class EmbedderData(pl.LightningDataModule):
     def val_dataloader(self):
         return DataLoader(
             self.valid,
+            shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             drop_last=True,
@@ -68,6 +69,7 @@ class EmbedderData(pl.LightningDataModule):
     def test_dataloader(self):
         return DataLoader(
             self.test,
+            shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
             drop_last=True,
