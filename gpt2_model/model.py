@@ -36,8 +36,7 @@ class GPT2Classifier(pl.LightningModule):
         ).logits
 
     def training_step(self, batch, batch_idx):
-        inputs, targets = batch
-        input_ids, attention_mask = inputs
+        input_ids, attention_mask, targets = batch
 
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
@@ -56,8 +55,7 @@ class GPT2Classifier(pl.LightningModule):
         )
 
     def validation_step(self, batch, batch_idx):
-        inputs, targets = batch
-        input_ids, attention_mask = inputs
+        input_ids, attention_mask, targets = batch
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
         self.log(
@@ -76,4 +74,4 @@ class GPT2Classifier(pl.LightningModule):
 
     def configure_optimizers(self):
         optim = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
-        return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
+        return optim
