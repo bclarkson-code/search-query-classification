@@ -27,6 +27,9 @@ if __name__ == "__main__":
         precision=16,
     )
     Path("preds").mkdir(exist_ok=True)
+    debug_dataloader = queries.val_dataloader()[:10]
+    preds = trainer.predict(embedder, debug_dataloader)
+    print(f"Debug predictions: {preds}")
     with torch.no_grad():
         embedder.eval()
         for loader, ds_name in zip(
