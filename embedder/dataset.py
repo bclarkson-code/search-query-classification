@@ -8,7 +8,7 @@ class EmbedderData(pl.LightningDataModule):
     def __init__(
         self,
         data_path: str = "dataframes",
-        batch_size: int = 2,
+        batch_size: int = 1024,
         num_workers: int = 1,
         persistent_workers: bool = True,
     ):
@@ -24,7 +24,7 @@ class EmbedderData(pl.LightningDataModule):
             self.train = Dataset.load_from_disk(train_path)
             self.train.set_format(
                 type="torch",
-                columns=["input_ids", "attention_mask", "category"],
+                columns=["input_ids", "attention_mask"],
             )
         else:
             self.train = None
@@ -33,7 +33,7 @@ class EmbedderData(pl.LightningDataModule):
             self.valid = Dataset.load_from_disk(valid_path)
             self.valid.set_format(
                 type="torch",
-                columns=["input_ids", "attention_mask", "category"],
+                columns=["input_ids", "attention_mask"],
             )
         else:
             self.valid = None
@@ -42,7 +42,7 @@ class EmbedderData(pl.LightningDataModule):
             self.test = Dataset.load_from_disk(test_path)
             self.test.set_format(
                 type="torch",
-                columns=["input_ids", "attention_mask", "category"],
+                columns=["input_ids", "attention_mask"],
             )
         else:
             self.test = None

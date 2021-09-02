@@ -1,8 +1,9 @@
 import logging
 import os
+
 os.environ["XLA_USE_BF16"] = "1"
 os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
-os.environ['TOKENIZERS_PARALLELISM'] = 'false'
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import pytorch_lightning as pl
 from pytorch_lightning import loggers as pl_loggers
@@ -11,22 +12,13 @@ from model import Classifier
 from dataset import EmbedderData
 import pickle
 
-if __name__ == '__main__':
-    tb_logger = pl_loggers.TensorBoardLogger('embedder-logs/')
+if __name__ == "__main__":
     N_DEVICES = 8
     queries = EmbedderData(
-        batch_size=256,
+        batch_size=1024,
         num_workers=os.cpu_count(),
     )
-    queries.prepare_data()
-    queries.setup()
-    weights = queries.calculate_weights()
-    classifier = Classifier(
-        lr=1e-4,
-        weights=weights,
-        num_labels=7,
-        use_pretrained=False
-    )
+    embedder = Embedder()
     trainer = pl.Trainer(
         tpu_cores=8,
         max_epochs=2,
