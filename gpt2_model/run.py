@@ -21,7 +21,7 @@ if __name__ == "__main__":
         # gpus=2,
         max_epochs=1,
         progress_bar_refresh_rate=1,
-        val_check_interval=2000,
+        val_check_interval=10000,
         # precision=16,
         # accelerator="ddp",
     )
