@@ -12,7 +12,7 @@ import pickle
 
 if __name__ == "__main__":
     queries = EmbedderData(
-        "/home/benedictclarkson1/search-query-classification/gpt2_model"
+        "/home/benedictclarkson1/search-query-classification/gpt2_model",
         batch_size=2048,
         num_workers=os.cpu_count(),
     )
