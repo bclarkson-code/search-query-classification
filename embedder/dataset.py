@@ -2,6 +2,7 @@ import os
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from datasets import Dataset
+import torch
 
 
 class Subset(torch.utils.data.Dataset):
