@@ -6,7 +6,6 @@ os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import pickle
 import torch
-import torch_xla.core.xla_model as xm
 import pytorch_lightning as pl
 from dataset import EmbedderData
 from model import Embedder
@@ -26,7 +25,6 @@ if __name__ == "__main__":
         tpu_cores=8,
         precision=16,
     )
-    device = xm.xla_device()
     with torch.no_grad():
         embedder.to(device)
         embedder.eval()
