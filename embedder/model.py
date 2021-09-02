@@ -62,9 +62,6 @@ class Embedder(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         inputs, targets = batch
         input_ids, attention_mask = inputs
-        print(input_ids)
-        print(input_ids.shape)
-        raise ValueError
         input_ids = torch.stack(input_ids).T
         attention_mask = torch.stack(attention_mask).T
         preds = self(input_ids, attention_mask)
