@@ -6,14 +6,31 @@ import torch
 
 
 class Subset(torch.utils.data.Dataset):
-    def __init__(self, ds):
+    def __init__(self, ds, label):
         self.ds = ds
+        self.label = label
 
     def __len__(self):
-        return 1024
+        return 4096
 
     def __getitem__(self, idx):
-        return self.ds.__getitem__(idx)
+        input = self.ds.__getitem__(idx)
+        input["label"] = self.label
+        return input
+
+
+class LabelledDataset(torch.utils.data.Dataset):
+    def __init__(self, ds, label):
+        self.ds = ds
+        self.label = label
+
+    def __len__(self):
+        return self.ds.__len__()
+
+    def __getitem__(self, idx):
+        input = self.ds.__getitem__(idx)
+        input["label"] = self.label
+        return input
 
 
 class EmbedderData(pl.LightningDataModule):
@@ -31,7 +48,7 @@ class EmbedderData(pl.LightningDataModule):
         self.num_workers = num_workers
         self.persistent_workers = persistent_workers
 
-        train_path = os.path.join(data_path, "datasets/train")
+        train_path = os.path.join(data_path, "train")
         if os.path.exists(train_path):
             self.train = Dataset.load_from_disk(train_path)
             self.train.set_format(
@@ -40,7 +57,7 @@ class EmbedderData(pl.LightningDataModule):
             )
         else:
             self.train = None
-        valid_path = os.path.join(data_path, "datasets/valid")
+        valid_path = os.path.join(data_path, "valid")
         if os.path.exists(valid_path):
             self.valid = Dataset.load_from_disk(valid_path)
             self.valid.set_format(
@@ -49,7 +66,7 @@ class EmbedderData(pl.LightningDataModule):
             )
         else:
             self.valid = None
-        test_path = os.path.join(data_path, "datasets/test")
+        test_path = os.path.join(data_path, "test")
         if os.path.exists(test_path):
             self.test = Dataset.load_from_disk(test_path)
             self.test.set_format(
@@ -61,7 +78,7 @@ class EmbedderData(pl.LightningDataModule):
 
     def train_dataloader(self):
         return DataLoader(
-            self.train,
+            LabelledDataset(self.train, "train"),
             batch_size=self.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
@@ -71,7 +88,7 @@ class EmbedderData(pl.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(
-            self.valid,
+            LabelledDataset(self.valid, "valid"),
             shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
@@ -80,7 +97,7 @@ class EmbedderData(pl.LightningDataModule):
 
     def test_dataloader(self):
         return DataLoader(
-            self.test,
+            LabelledDataset(self.test, "test"),
             shuffle=False,
             batch_size=self.batch_size,
             num_workers=self.num_workers,
@@ -88,8 +105,9 @@ class EmbedderData(pl.LightningDataModule):
         )
 
     def debug_dataloader(self):
+        subset = Subset(self.train, "debug")
         return DataLoader(
-            Subset(self.train),
+            subset,
             batch_size=16,
             shuffle=False,
             num_workers=self.num_workers,

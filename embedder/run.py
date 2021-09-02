@@ -14,31 +14,27 @@ from tqdm.auto import tqdm
 from pathlib import Path
 
 if __name__ == "__main__":
-    queries = EmbedderData(
-        "d:/Downloads",
-        batch_size=4096,
-        num_workers=os.cpu_count(),
-    )
-    embedder = Embedder(
-        "d:/Downloads/gpt2_lightning_logs/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
-    )
-    trainer = pl.Trainer(
-        gpus=2,
-        precision=16,
-    )
-    Path("preds").mkdir(exist_ok=True)
-    preds = trainer.predict(embedder, queries.debug_dataloader())
-    print(f"Debug predictions: {preds}")
     with torch.no_grad():
+        queries = EmbedderData(
+            "/home/benedict/Documents/thesis/datasets",
+            batch_size=2048,
+            num_workers=os.cpu_count(),
+        )
+        embedder = Embedder(
+            "/home/benedict/Documents/thesis/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
+        )
         embedder.eval()
-        for loader, ds_name in zip(
-            [
-                queries.val_dataloader(),
-                queries.train_dataloader(),
-                queries.test_dataloader(),
-            ],
-            ["valid", "train", "test"],
-        ):
-            preds = trainer.predict(embedder, loader)
-            with open(f"preds/{ds_name}_preds.npy", "wb") as f:
-                np.save(f, preds)
+
+        trainer = pl.Trainer(gpus=2, precision=16, accelerator="ddp")
+        os.system("rm -rf preds")
+        Path("preds").mkdir(exist_ok=True)
+        debug = queries.debug_dataloader()
+        preds = trainer.predict(embedder, debug)
+        print(f"Debug succeeded: {preds is not None}")
+
+        for loader in [
+            queries.val_dataloader(),
+            queries.train_dataloader(),
+            queries.test_dataloader(),
+        ]:
+            trainer.predict(embedder, loader)

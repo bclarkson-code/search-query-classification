@@ -4,6 +4,7 @@ import torch
 from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
+import numpy as np
 
 
 class Embedder(pl.LightningModule):
@@ -30,10 +31,14 @@ class Embedder(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        return self.embedder(
-            input_ids=input_ids, attention_mask=attention_mask
-        )[0][:, -1, :]
+        return self.embedder(input_ids=input_ids, attention_mask=attention_mask)[0][
+            :, -1, :
+        ]
 
     def predict_step(self, batch, batch_idx):
         input_ids, attention_mask = batch["input_ids"], batch["attention_mask"]
-        return self(input_ids, attention_mask)
+        label = batch["label"][0]
+        preds = self(input_ids, attention_mask)
+        with open(f"preds/{label}_{batch_idx}.npy", "wb") as f:
+            np.save(f, preds.cpu())
+        del preds

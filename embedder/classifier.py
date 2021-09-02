@@ -5,6 +5,7 @@ from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
 from transformers import GPT2ForSequenceClassification
+import numpy as np
 
 
 class GPT2Classifier(pl.LightningModule):
@@ -62,9 +63,7 @@ class GPT2Classifier(pl.LightningModule):
         ]
         preds = self(input_ids, attention_mask)
         loss = self.loss(preds, targets)
-        self.log(
-            "valid/loss", loss, on_step=True, on_epoch=False, sync_dist=True
-        )
+        self.log("valid/loss", loss, on_step=True, on_epoch=False, sync_dist=True)
         self.valid_acc(preds, targets)
 
     def validation_epoch_end(self, outputs):
