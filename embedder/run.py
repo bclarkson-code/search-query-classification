@@ -41,7 +41,8 @@ if __name__ == "__main__":
             for i, batch in tqdm(
                 loader, desc=f"Embedding {ds_name}", total=len(loader)
             ):
-                batch.to(device)
+                input_ids = batch["input_ids"].to(device)
+                attention_mask = batch["attention_mask"].to(device)
                 preds = embedder.predict_step(batch)
                 preds = preds.cpu().numpy()
                 with open(f"preds/valid_preds_{i}.npy", "wb") as f:
