@@ -23,7 +23,7 @@ if __name__ == "__main__":
         "/home/benedictclarkson1/search-query-classification/gpt2_model/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
     )
     trainer = pl.Trainer(
-        tpu_cores=8,
+        gpus=2,
         precision=16,
     )
     Path("preds").mkdir(exist_ok=True)
