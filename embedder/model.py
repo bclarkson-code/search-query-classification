@@ -36,6 +36,4 @@ class Embedder(pl.LightningModule):
 
     def predict_step(self, batch, batch_idx):
         input_ids, attention_mask = batch["input_ids"], batch["attention_mask"]
-        print(batch)
-        print(input_ids)
         return self(input_ids, attention_mask)
