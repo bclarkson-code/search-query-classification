@@ -26,7 +26,7 @@ if __name__ == "__main__":
         accelerator="ddp",
     )
 
-    lr_finder = trainer.tuner.lr_find(model)
+    lr_finder = trainer.tuner.lr_find(model, queries)
 
     # Results can be found in
     lr_finder.results
