@@ -17,7 +17,7 @@ if __name__ == "__main__":
     with torch.no_grad():
         queries = EmbedderData(
             "/home/benedict/Documents/thesis/datasets",
-            batch_size=2048,
+            batch_size=4096,
             num_workers=os.cpu_count(),
         )
         embedder = Embedder(
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         )
         embedder.eval()
 
-        trainer = pl.Trainer(gpus=2, precision=16, accelerator="ddp")
+        trainer = pl.Trainer(tpu_cores=8, precision=16)
         os.system("rm -rf preds")
         Path("preds").mkdir(exist_ok=True)
         debug = queries.debug_dataloader()
