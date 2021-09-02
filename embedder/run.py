@@ -38,12 +38,6 @@ if __name__ == "__main__":
             ],
             ["valid", "train", "test"],
         ):
-            for i, batch in tqdm(
-                loader, desc=f"Embedding {ds_name}", total=len(loader)
-            ):
-                input_ids = batch["input_ids"].to(device)
-                attention_mask = batch["attention_mask"].to(device)
-                preds = embedder.predict_step(batch)
-                preds = preds.cpu().numpy()
-                with open(f"preds/valid_preds_{i}.npy", "wb") as f:
-                    np.save(f, preds)
+            preds = trainer.predict(embedder, loader)
+            with open(f"preds/{ds_name}_preds.npy", "wb") as f:
+                np.save(f, preds)
