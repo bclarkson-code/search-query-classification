@@ -28,5 +28,5 @@ if __name__ == "__main__":
     lr_finder.results
 
     with open("lr_finder_results", "wb") as f:
-        f.write(lr_finder.results)
+        pickle.dump(lr_finder.results, f)
     # trainer.fit(model, queries)
