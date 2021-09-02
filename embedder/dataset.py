@@ -10,7 +10,7 @@ class Subset(torch.utils.data.Dataset):
         self.ds = ds
 
     def __len__(self):
-        return 128
+        return 1024
 
     def __getitem__(self, idx):
         return self.ds.__getitem__(idx)
