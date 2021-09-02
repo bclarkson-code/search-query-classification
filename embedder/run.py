@@ -6,8 +6,8 @@ os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import pytorch_lightning as pl
-from model import Classifier
 from dataset import EmbedderData
+from model import Embedder
 import pickle
 
 if __name__ == "__main__":
