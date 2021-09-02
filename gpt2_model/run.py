@@ -22,8 +22,8 @@ if __name__ == "__main__":
         max_epochs=1,
         progress_bar_refresh_rate=1,
         val_check_interval=2000,
-        precision=16,
-        accelerator="ddp",
+        # precision=16,
+        # accelerator="ddp",
     )
 
     trainer.fit(model, queries)
