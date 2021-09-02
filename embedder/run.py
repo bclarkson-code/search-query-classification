@@ -11,6 +11,7 @@ from dataset import EmbedderData
 from model import Embedder
 import numpy as np
 from tqdm.auto import tqdm
+from pathlib import Path
 
 if __name__ == "__main__":
     queries = EmbedderData(
@@ -25,6 +26,7 @@ if __name__ == "__main__":
         tpu_cores=8,
         precision=16,
     )
+    Path("preds").mkdir(exist_ok=True)
     with torch.no_grad():
         embedder.eval()
         for loader, ds_name in zip(
