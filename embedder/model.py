@@ -6,7 +6,7 @@ import pytorch_lightning as pl
 import torchmetrics
 
 
-class Classifier(pl.LightningModule):
+class Embedder(pl.LightningModule):
     def __init__(
         self,
         checkpoint_path: str = "~/search-query-classification/pretrain_model/pretrain-checkpoints/model-epoch=01-val"
