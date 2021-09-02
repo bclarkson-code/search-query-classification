@@ -79,6 +79,6 @@ class GPT2Classifier(pl.LightningModule):
     def configure_optimizers(self):
         optim = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
-            optim, max_lr=1e-1, total_steps=7814 * 3
+            optim, max_lr=1e-1, total_steps=5000
         )
         return optim
