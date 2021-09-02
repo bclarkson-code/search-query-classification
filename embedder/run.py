@@ -23,6 +23,6 @@ if __name__ == "__main__":
         tpu_cores=8,
         precision=16,
     )
-    val_preds = trainer.predict(embedder, data.val_dataloader())
+    val_preds = trainer.predict(embedder, queries.val_dataloader())
     val_preds = val_pred.detach().numpy()
-    np.save(val_preds)
+    np.save(val_preds, "valid_preds")
