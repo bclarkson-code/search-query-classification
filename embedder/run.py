@@ -15,12 +15,12 @@ from pathlib import Path
 
 if __name__ == "__main__":
     queries = EmbedderData(
-        "/home/benedictclarkson1/search-query-classification/gpt2_model",
+        "d:/Downloads",
         batch_size=4096,
         num_workers=os.cpu_count(),
     )
     embedder = Embedder(
-        "/home/benedictclarkson1/search-query-classification/gpt2_model/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
+        "d:/Downloads/gpt2_lightning_logs/lightning_logs/version_6/checkpoints/epoch=2-step=13999.ckpt",
     )
     trainer = pl.Trainer(
         gpus=2,
