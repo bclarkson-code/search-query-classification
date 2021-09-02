@@ -30,7 +30,7 @@ class Embedder(pl.LightningModule):
         self.valid_acc = torchmetrics.Accuracy()
 
     def forward(self, input_ids, attention_mask):
-        embedding = self.embedder(
+        return self.embedder(
             input_ids=input_ids, attention_mask=attention_mask
         )[0][:, -1, :]
 
